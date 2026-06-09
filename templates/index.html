@@ -1252,8 +1252,38 @@ $$Error = Bias^2 + Variance + Irreducible Error$$
         const bias = simParams.bias || 0;
         const weight = simParams.weight || 0.5;
 
+        // 1. 動態繪製背景分類區塊 (旋轉畫布來填充)
+        ctx.save();
+        ctx.translate(w/2, h/2 - bias);
+        const angle = Math.atan(-weight);
+        ctx.rotate(angle);
+        
+        // 上半部 (預測為紅色的區域)
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.12)';
+        ctx.fillRect(-w*2, -h*2, w*4, h*2);
+        
+        // 下半部 (預測為藍色的區域)
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.12)';
+        ctx.fillRect(-w*2, 0, w*4, h*2);
+        ctx.restore();
+
         simPoints.forEach(p => {
-          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+          // 2. 判斷該點位是否被目前的決策線「錯誤分類」了
+          const lineY = h/2 - bias - weight * (p.x - w/2);
+          const predLabel = p.y < lineY ? 0 : 1;
+          const isWrong = predLabel !== p.label;
+
+          // 錯誤分類外框改為黃色警示；正確維持白色
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5, isWrong ? '#eab308' : '#ffffff');
+          
+          // 錯誤點加上外圍光環，讓拖曳參數時有動態回饋感
+          if (isWrong) {
+            ctx.strokeStyle = '#eab308';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+            ctx.stroke();
+          }
         });
 
         ctx.strokeStyle = '#10b981';
