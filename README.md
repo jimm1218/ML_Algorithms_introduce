@@ -1,6 +1,8 @@
 # 機器學習演算法介紹 (ML Algorithms Introduce)
 **連結請點此：https://ml-algorithms-introduce-gaw2.vercel.app/**
 
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/0720dae0-c38d-48c4-8ca0-316b0ef1b5d7" />
+
 ## 📝 產品介紹
 
 這是一個專注於介紹與實作各種基礎到進階**機器學習演算法 (Machine Learning Algorithms)** 的專案。
