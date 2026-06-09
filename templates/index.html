@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 智慧學習助理 - 機器學習十大演算法與互動實驗室</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#10b981', // Emerald Green
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+            },
+            bgdark: {
+              950: '#090d16',
+              900: '#0f172a', // Slate 900
+              800: '#1e293b', // Slate 800
+              700: '#334155', // Slate 700
+              600: '#475569',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Marked.js (Markdown Parser) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- KaTeX (LaTeX math rendering) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Noto Sans TC', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.3);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.3);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.5);
+    }
+    /* Hide horizontal scrollbar for clean chip view */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(0.95); opacity: 0.5; }
+    }
+    .pulse-dot::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: inherit;
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-bgdark-950 text-slate-100 h-screen flex flex-col antialiased overflow-hidden">
+
+  <!-- Header Section -->
+  <header class="border-b border-slate-800 bg-bgdark-900/90 backdrop-blur-md sticky top-0 z-40 px-4 py-3 flex items-center justify-between flex-shrink-0">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+      </div>
+      <div>
+        <h1 class="text-base font-bold tracking-wider text-slate-100 flex items-center gap-1.5">
+          AI 智慧數據工作區
+          <span class="text-xs bg-brand-900/80 text-brand-500 px-2 py-0.5 rounded-full border border-brand-700/50 font-normal">
+            10 大演算法全互動實驗室
+          </span>
+        </h1>
+        <p class="text-xs text-slate-400">研讀報告、動態調參模擬、AI 智慧助教三合一終極平台</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+      <!-- Settings Button -->
+      <button id="settings-btn" class="p-2 text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-lg transition-colors relative" title="API 金鑰與模型設定">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span id="key-badge" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-yellow-500 rounded-full border-2 border-bgdark-900" title="未使用 API Key"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Responsive Tab Switcher for Mobile & Tablet View (Hidden on large screens) -->
+  <div class="flex border-b border-slate-800 bg-bgdark-900 lg:hidden flex-shrink-0">
+    <button id="tab-nav-manual" onclick="switchMobileView('manual')" class="flex-1 py-3 text-xs font-semibold text-center border-b-2 border-brand-500 text-brand-500">
+      📖 研讀手冊
+    </button>
+    <button id="tab-nav-simulator" onclick="switchMobileView('simulator')" class="flex-1 py-3 text-xs font-semibold text-center border-b-2 border-transparent text-slate-400">
+      📊 數據實驗
+    </button>
+    <button id="tab-nav-chat" onclick="switchMobileView('chat')" class="flex-1 py-3 text-xs font-semibold text-center border-b-2 border-transparent text-slate-400">
+      💬 AI 對話助教
+    </button>
+  </div>
+
+  <!-- Main Body Layout -->
+  <main class="flex-1 flex overflow-hidden relative min-h-0">
+
+    <!-- 1. LEFT SIDEBAR: The ML Manual List (Always visible on Desktop >= lg) -->
+    <aside id="manual-sidebar" class="hidden lg:flex flex-col w-64 border-r border-slate-800 bg-bgdark-900/50 flex-shrink-0 z-30 transition-all duration-300">
+      <div class="p-4 border-b border-slate-800 bg-bgdark-900/30">
+        <span class="text-xs font-bold tracking-wider text-slate-400 uppercase">
+          演算法指南單元
+        </span>
+      </div>
+
+      <div class="p-3 border-b border-slate-800/50 bg-bgdark-900/20">
+        <div class="relative">
+          <input id="manual-search" type="text" placeholder="快速搜尋單元..." class="w-full bg-slate-950/80 border border-slate-800 rounded-lg py-1.5 pl-8 pr-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="absolute left-2.5 top-2.5 text-slate-500"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1 bg-bgdark-950/20" id="algorithm-list">
+        <!-- Rendered by JS -->
+      </div>
+    </aside>
+
+    <!-- 2. CENTER PANEL: Unified Scrollable Handbook & Interactive Simulator -->
+    <div id="center-pane" class="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 space-y-6 min-w-0">
+      
+      <!-- CARD 1: Interactive Simulator Pane -->
+      <section id="pane-simulator" class="bg-bgdark-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col flex-shrink-0">
+        
+        <!-- Top Title -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 mb-4 gap-2">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse"></span>
+            <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+              📊 數據實驗室：<span id="simulator-title" class="text-brand-400">載入中...</span>
+            </h3>
+          </div>
+          <div id="sim-info-badge" class="text-[11px] text-slate-400 bg-slate-950 px-2.5 py-1 rounded-full border border-slate-800/80">
+            請點選演算法以開始數據模擬
+          </div>
+        </div>
+
+        <!-- Canvas and controls grid -->
+        <div class="flex flex-col xl:flex-row gap-4 items-stretch">
+          <!-- Canvas Frame -->
+          <div class="flex-1 bg-slate-950/90 rounded-xl border border-slate-800/60 relative overflow-hidden flex items-center justify-center min-h-[300px]">
+            <canvas id="sim-canvas" class="block cursor-crosshair w-full h-full max-h-[320px]"></canvas>
+          </div>
+
+          <!-- Param Controls Panel -->
+          <div class="w-full xl:w-72 flex flex-col justify-between bg-bgdark-800/20 border border-slate-800/50 p-4 rounded-xl space-y-4 flex-shrink-0">
+            <div>
+              <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1"/></svg>
+                調參面板 (Hyperparameters)
+              </h4>
+              <div id="sim-controls-container" class="space-y-4 text-xs">
+                <!-- Generated Dynamically for ALL 10 algos -->
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="pt-2 border-t border-slate-800/60 flex items-center gap-2">
+              <button id="sim-reset-btn" class="flex-1 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors">
+                重置數據
+              </button>
+              <button id="sim-action-btn" class="flex-1 py-1.5 bg-brand-600 hover:bg-brand-500 active:bg-brand-700 text-white rounded-lg text-xs font-semibold transition-colors hidden">
+                執行優化
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARD 2: Handbook Text & Quiz Report -->
+      <section id="pane-manual" class="bg-bgdark-900/40 border border-slate-800/80 rounded-2xl p-5 lg:p-6 shadow-lg space-y-4 flex-shrink-0">
+        
+        <!-- Header with Sub-tabs Switcher -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-3">
+          <div class="flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-brand-500"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+            <h2 id="report-title" class="text-base font-bold text-slate-100">演算法詳細研讀介紹</h2>
+          </div>
+          <!-- Sub-tabs switcher -->
+          <div class="flex bg-slate-950/80 p-1 rounded-xl border border-slate-800 shrink-0">
+            <button id="subtab-handbook" onclick="switchSubTab('handbook')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white transition-all">📖 報告與評析</button>
+            <button id="subtab-quiz" onclick="switchSubTab('quiz')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-slate-200 transition-all">🧠 隨堂測驗</button>
+          </div>
+        </div>
+        
+        <!-- Handbook Content Container -->
+        <div id="report-content" class="prose prose-invert max-w-none text-xs leading-relaxed text-slate-300 space-y-4">
+          <!-- Handled dynamically -->
+        </div>
+
+        <!-- Quiz Container (Hidden initially) -->
+        <div id="quiz-content" class="hidden text-xs space-y-4 text-slate-300">
+          <!-- Handled dynamically -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 3. RIGHT SIDEBAR: Chat Assistant Column -->
+    <section id="chat-sidebar" class="hidden lg:flex flex-col w-96 border-l border-slate-800 bg-bgdark-900/20 flex-shrink-0 z-40 transition-all duration-300">
+      
+      <!-- Chat Header -->
+      <div class="p-4 border-b border-slate-800 bg-bgdark-900/80 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-500 pulse-dot relative inline-block"></span>
+          <div>
+            <h3 class="text-xs font-bold text-slate-200">💬 AI 智慧學習助教</h3>
+            <p class="text-[10px] text-slate-400">雙核心：本地 RAG 檢索 / 雲端大模型</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Status Notification banner -->
+      <div id="status-banner" class="bg-indigo-950/40 border-b border-indigo-900/30 px-4 py-2 text-[10px] flex justify-between items-center text-indigo-200 flex-shrink-0">
+        <span class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-500 pulse-dot relative inline-block"></span>
+          <span id="status-text">免金鑰本地核心快速檢索模式</span>
+        </span>
+        <button id="banner-action-btn" class="text-brand-500 hover:text-brand-600 font-semibold underline shrink-0">
+          設定 API Key
+        </button>
+      </div>
+
+      <!-- Chat History -->
+      <div id="chat-history" class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4 text-xs">
+        <!-- Messages loaded here -->
+      </div>
+
+      <!-- Quick Chips QA (Suggestions) -->
+      <div class="px-3 pt-2 bg-bgdark-950 border-t border-slate-800/80">
+        <div class="text-[10px] text-slate-400 mb-1.5 flex items-center gap-1">
+          💡 點擊以下推薦問題快速發問：
+        </div>
+        <div id="quick-chips" class="flex space-x-1.5 overflow-x-auto hide-scrollbar pb-2">
+          <!-- Chips generated dynamically by JS -->
+        </div>
+      </div>
+
+      <!-- Chat Input Area -->
+      <div class="p-3 border-t border-slate-800 bg-bgdark-900/80 flex-shrink-0">
+        <form id="chat-form" class="flex space-x-2">
+          <div class="relative flex-1">
+            <input id="user-input" type="text" placeholder="向 AI 助理提出任何演算法疑問..." class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 px-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors shadow-inner" required>
+          </div>
+          <button id="send-btn" type="submit" class="w-8 h-8 bg-brand-600 hover:bg-brand-500 text-white rounded-lg flex items-center justify-center transition-all shadow-md focus:outline-none flex-shrink-0">
+            <svg id="send-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transform rotate-90"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            <div id="send-spinner" class="hidden w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+          </button>
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Modal Settings Panel -->
+  <div id="settings-modal" class="hidden fixed inset-0 z-50 overflow-hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div id="settings-backdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <div class="inline-block align-bottom bg-bgdark-800 rounded-2xl border border-slate-700 text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        
+        <div class="bg-gradient-to-r from-bgdark-800 to-slate-800 px-6 py-4 border-b border-slate-700/60 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            <h3 class="text-base font-bold text-slate-200">AI 服務商與金鑰設定</h3>
+          </div>
+          <button id="close-modal-x" class="text-slate-400 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="px-6 py-4 space-y-4">
+          <p class="text-xs text-slate-400 leading-relaxed">
+            留空白代表使用後端「本地精準檢索回答」（免 API 金鑰）。若想獲得更流暢靈活的 AI 自然對話、延伸案例或程式碼撰寫，可輸入您自有的 API Key。此金鑰僅會儲存在您本地瀏覽器中。
+          </p>
+
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-2">選擇 AI 服務商 (AI Provider)</label>
+            <div class="grid grid-cols-3 gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-700/80">
+              <button id="tab-gemini" onclick="switchProvider('gemini')" class="py-2 text-xs font-medium rounded-lg text-center transition-all bg-brand-600 text-white shadow-sm">Gemini</button>
+              <button id="tab-openai" onclick="switchProvider('openai')" class="py-2 text-xs font-medium rounded-lg text-center transition-all text-slate-400 hover:text-slate-200">OpenAI</button>
+              <button id="tab-anthropic" onclick="switchProvider('anthropic')" class="py-2 text-xs font-medium rounded-lg text-center transition-all text-slate-400 hover:text-slate-200">Anthropic</button>
+            </div>
+          </div>
+
+          <div class="space-y-3 pt-1">
+            <div>
+              <label id="key-label" class="text-xs font-semibold text-slate-300 block mb-1.5">Gemini API Key:</label>
+              <div class="relative">
+                <input id="api-key-input" type="password" placeholder="輸入您的 API 金鑰 (例如 AIzaSy...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-3 pr-10 text-xs text-slate-200 focus:outline-none focus:border-brand-500">
+                <button id="toggle-key-visibility" class="absolute right-2.5 top-2.5 text-slate-500 hover:text-slate-300">
+                  <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="text-xs font-semibold text-slate-300 block mb-1.5">模型版本 (Model Version):</label>
+              <select id="model-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 px-3 text-xs text-slate-200 focus:outline-none focus:border-brand-500">
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div id="test-feedback" class="hidden p-2.5 rounded-xl text-xs flex items-center gap-2"></div>
+        </div>
+
+        <div class="px-6 py-4 bg-bgdark-900/50 border-t border-slate-700/60 flex items-center justify-between">
+          <button id="test-connection-btn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-xs font-medium transition-colors flex items-center gap-1">
+            <svg id="test-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+            測試連線
+          </button>
+          
+          <div class="flex space-x-2">
+            <button id="cancel-modal-btn" class="px-3.5 py-1.5 text-xs text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">取消</button>
+            <button id="save-modal-btn" class="px-4 py-1.5 text-xs bg-brand-600 hover:bg-brand-500 active:bg-brand-700 text-white font-semibold rounded-lg transition-colors">儲存設定</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script>
+    // ----------------- (1) UTILITY FUNCTIONS -----------------
+    function getCurrentTimeStr() {
+      const now = new Date();
+      let hrs = now.getHours();
+      let mins = now.getMinutes();
+      const ampm = hrs >= 12 ? '下午' : '上午';
+      hrs = hrs % 12;
+      hrs = hrs ? hrs : 12;
+      mins = mins < 10 ? '0' + mins : mins;
+      return `${ampm}${hrs}:${mins}`;
+    }
+
+    // ----------------- (2) KNOWLEDGE BASE (機器學習十大演算法與概念核心庫) -----------------
+    const localKnowledgeBase = [
+      {
+        id: "all_intro",
+        title: "十大演算法導讀指南",
+        keywords: ["機器學習", "十大演算法", "演算法", "導讀", "學習手冊", "報告"],
+        summary: "機器學習領域最核心、最實用的十種精選演算法概覽與對比。",
+        content: `### 歡迎使用「機器學習十大演算法智慧互動工作區」！
+
+本平台將靜態研讀報告與**動態 HTML5 數據實驗室**以及 **AI 智慧學習助教**完美結合。
+
+#### 📘 十大演算法清單與特點：
+1. **線性迴歸 (Linear Regression)** - 連續數值預測的基石模型
+2. **邏輯斯迴歸 (Logistic Regression)** - 二分類預測的最佳入門標準
+3. **決策樹 (Decision Trees)** - 具備高度規則直觀與基尼係數分裂特徵
+4. **支持向量機 (SVM)** - 最大化邊界 (Margin) 與核技巧的強大幾何分類器
+5. **單純貝氏 (Naive Bayes)** - 高維文字分類與條件獨立假設機率模型
+6. **K-Nearest Neighbors (KNN)** - 惰性學習的經典非參數鄰近分類
+7. **K-Means Clustering** - 非監督分群與質心疊代的黃金代表
+8. **隨機森林 (Random Forest)** - 雙重隨機自主自助 Bagging 集成強分類器
+9. **梯度提升樹 (AdaBoost/GBDT)** - 持續修復殘差殘餘的 Boosting 連續修正精英
+10. **主成分分析 (PCA)** - 無監督高維度資料特徵降維的最佳方法
+
+---
+#### 💡 天平平衡：
+在右側實驗室，您可以任意點選這些單元。中央的 canvas 畫布將即時生成對應數據集。您可以**動手點擊畫布加入客製數據**，並利用右下角滑桿拉動超參數，直接觀測演算法的收斂曲線！`,
+        quiz: [
+          {
+            question: "關於過度配適（Overfitting），以下敘述何者正確？",
+            options: [
+              "模型在訓練集和測試集上的表現都非常差",
+              "模型在訓練集上表現極佳，但在測試集上泛化能力差",
+              "模型參數太少，無法擬合資料的真實規律",
+              "增加特徵數量一定可以完美解決過度配適"
+            ],
+            answer: 1,
+            explanation: "過度配適（Overfitting）代表模型在訓練資料上擬合得太過完美（記住了過多噪聲與特徵），導致其在未見過的測試資料集上預測表現大幅下降。"
+          },
+          {
+            question: "在機器學習中，偏差與變異（Bias-Variance Tradeoff）的核心意涵是什麼？",
+            options: [
+              "我們應該總是追求零偏差與零變異，這在實務上很容易實現",
+              "偏差越大，代表模型越容易發生過度配適",
+              "增加模型複雜度通常會降低偏差，但會提高變異",
+              "減少訓練資料量可以同時降低偏差與變異"
+            ],
+            answer: 2,
+            explanation: "當我們提高模型的複雜度時，模型能擬合更複雜的邊界，因此偏差（Bias）會隨之下降；然而這會讓模型變得更不穩定，容易對噪聲敏感，進而提高變異（Variance）。"
+          }
+        ]
+      },
+      {
+        id: "linear_regression",
+        title: "線性迴歸 (Linear Regression)",
+        keywords: ["線性迴歸", "線性回歸", "Linear", "最小平方法", "OLS", "損失函數"],
+        summary: "用一條直線擬合自變數與應變數之間的線性關係，是迴歸預測問題的基礎。",
+        content: `### 📈 線性迴歸 (Linear Regression)
+
+線性迴歸是最簡單且最基礎的監督式機器學習演算法，用於預測**連續性數值**。
+
+#### 1. 核心數學公式
+預測方程式為：
+$$\\hat{y} = \\mathbf{w}^T \\mathbf{x} + b$$
+其中 $y$ 為預測目標，$\\mathbf{x}$ 為輸入特徵，$\\mathbf{w}$ 為特徵權重 (Weights)，$b$ 為偏差 (Bias)。
+
+#### 2. 損失函數 (Loss Function)
+線性迴歸通常使用**均方誤差 (Mean Squared Error, MSE)** 作為損失函數：
+$$MSE = \\frac{1}{m} \\sum_{i=1}^{m} (y^{(i)} - \\hat{y}^{(i)})^2$$
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **計算極其高效**：公式解簡單，訓練與預測速度都極快。<br>2. **可解釋性極佳**：權重係數 $w$ 直接代表了各項特徵對預測目標的影響權重與方向。<br>3. **易於擴展**：可輕鬆透過加入正則化（L1/L2）來防止過擬合。 |
+| **🔴 缺點限制** | 1. **線性假設限制**：無法擬合真實世界中常見的複雜非線性關係。<br>2. **極度敏感異常值**：由於採用 MSE（誤差平方），極端異常值（Outliers）會拉扯擬合線的方向，對模型造成嚴重偏差。 |
+| **🎯 應用場景** | 1. **房價與銷售預測**：依據坪數、生活機能預估房價。<br>2. **金融趨勢預估**：股票指數與市場趨勢的連續性走勢預估。<br>3. **行銷成效分析**：評估廣告投放預算與公司營收的線性回報關係。 |`,
+        quiz: [
+          {
+            question: "線性迴歸中最常使用哪一個損失函數來衡量模型預測值與真實值之間的差距？",
+            options: [
+              "均方誤差 (Mean Squared Error, MSE)",
+              "交叉熵損失 (Cross-Entropy Loss)",
+              "吉尼係數 (Gini Impurity)",
+              "合頁損失 (Hinge Loss)"
+            ],
+            answer: 0,
+            explanation: "線性迴歸處理的是連續性數值的預測，最經典的損失函數是均方誤差（MSE），即預測值與真實值之差的平方和的均值。"
+          },
+          {
+            question: "當數據集中存在極少數但數值極大的「異常值（Outliers）」時，對普通線性迴歸會造成什麼影響？",
+            options: [
+              "完全沒有任何影響，因為最小平方法會自動將其過濾",
+              "擬合直線會被嚴重拉向異常值，破壞其在正常資料點上的預測表現",
+              "損失函數會自動變小，模型精準度隨之提高",
+              "會促使模型自動轉化為邏輯斯迴歸"
+            ],
+            answer: 1,
+            explanation: "線性迴歸在計算 MSE時會將誤差平方放大。因此，遠離人群的異常值會對損失函數產生不成比例的巨大貢獻，迫使普通線性迴歸線偏離多數正常樣本以迎合異常值。"
+          }
+        ]
+      },
+      {
+        id: "logistic_regression",
+        title: "邏輯斯迴歸 (Logistic Regression)",
+        keywords: ["邏輯斯迴歸", "邏輯迴歸", "Logistic", "Sigmoid", "勝算比", "交叉熵", "二分類"],
+        summary: "基於 Sigmoid 函數將線性輸出轉換為機率，用於處理二分類問題的黃金算法。",
+        content: `### 🎯 邏輯斯迴歸 (Logistic Regression)
+
+儘管名字叫「迴歸」，但它其實是一個強大的**二分類 (Binary Classification)** 演算法。
+
+#### 1. 核心轉換：Sigmoid 函數
+邏輯斯迴歸在線性公式外面包覆了一層 Sigmoid 函數，將其輸出壓縮到 $[0, 1]$ 區間，代表機率：
+$$\\sigma(z) = \\frac{1}{1 + e^{-z}}$$
+預測機率公式為：
+$$P(y=1|\\mathbf{x}) = \\sigma(\\mathbf{w}^T \\mathbf{x} + b) = \\frac{1}{1 + e^{-(\\mathbf{w}^T \\mathbf{x} + b)}}$$
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **輸出概率化**：不僅給出分類結果，還能精準給出機率（如 85% 機率是垃圾郵件）。<br>2. **可解釋性強**：透過 Odds Ratio（勝算比），可以解釋特徵每增加一個單位，發生分類事件的機率翻了幾倍。<br>3. **運作極快**：非常輕量，極適合即時、低延遲的雲端線上預測系統。 |
+| **🔴 缺點限制** | 1. **線性邊界假設**：本質上在 Sigmoid 內部仍是線性決策邊界，面對非線性可分的資料集，分類成效會大打折扣。<br>2. **容易欠擬合**：相較於決策樹或 SVM，其模型擬合能力（Capacity）較低。 |
+| **🎯 應用場景** | 1. **信用風控與違約預測**：銀行依據客戶資料評估其貸款違約的機率。<br>2. **點擊率 (CTR) 預測**：在廣告推薦系統中，預估使用者點擊某個推薦內容的概率。<br>3. **醫學疾病診斷**：依據病人生理檢測指數，判斷患有某疾病的機率 (得病/沒得病)。 |`,
+        quiz: [
+          {
+            question: "邏輯斯迴歸中使用的 Sigmoid 函數，其主要幾何轉換功能是什麼？",
+            options: [
+              "將任何非線性邊界拉直成線性超平面",
+              "將實數域的線性模型輸出值壓縮到 (0, 1) 區間以代表機率",
+              "將高維特徵投影降維到 2D 空間",
+              "排除所有對預測沒有貢獻的特徵變數"
+            ],
+            answer: 1,
+            explanation: "Sigmoid 函數（S型曲線）的數學公式能將正負無窮大範圍內的線性模型輸出 $z$ 壓縮到 0 與 1 之間，使其能被合理解釋為機率值。"
+          },
+          {
+            question: "為什麼邏輯斯迴歸在計算損失函數時使用「交叉熵（Cross-Entropy）」而不是普通的「均方誤差（MSE）」？",
+            options: [
+              "因為使用 MSE 會導致損失函數在結合 Sigmoid 後變為非凸函數（Non-convex），容易陷入局部極小值",
+              "因為交叉熵計算速度比 MSE 快上一百倍",
+              "因為交叉熵只能處理連續型數值",
+              "因為 MSE 無法在 Python 中編寫實作"
+            ],
+            answer: 0,
+            explanation: "若將 Sigmoid 與 MSE 結合，求導後的損失函數會變成非凸函數（有許多山谷與局部低點），梯度下降時極易卡在局部極值。而交叉熵（對數損失）能確保損失函數是個完美的凹凸函數，梯度下降必能收斂至全域最優。"
+          }
+        ]
+      },
+      {
+        id: "decision_trees",
+        title: "決策樹 (Decision Trees)",
+        keywords: ["決策樹", "Decision Tree", "資訊熵", "吉尼係數", "資訊增益", "剪枝", "Gini"],
+        summary: "利用樹狀分支結構進行決策，根據資訊純度（如熵或吉尼係數）挑選最佳分割特徵。",
+        content: `### 🌳 決策樹 (Decision Trees)
+
+決策樹透過像流程圖一樣的樹狀分支結構進行決策。它能處理分類和迴歸任務。
+
+#### 1. 節點分割準則
+決策樹為了讓子節點越「純」越好，常見分裂依據包括：
+* **吉尼係數 (Gini Impurity - CART)**: 衡量隨機抽取兩個樣本類別不一致的機率：
+  $$Gini(D) = 1 - \\sum_{i=1}^{c} p_i^2$$
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **極致的直觀直覺**：決策路徑清晰，可直接轉化為「IF-THEN」規則，非技術人員也能秒懂。<br>2. **不需資料預處理**：不需要對特徵進行標準化、歸一化，且能自然容忍特徵缺失值。<br>3. **多功能性**：能同時輕鬆處理連續型特徵與類別型特徵。 |
+| **🔴 缺點限制** | 1. **極易過配配適 (Overfitting)**：如果沒有限制最大樹深，決策樹會無限制地長大，直到完美記住所有噪聲為止。<br>2. **極度不穩定**：資料集中只要有微小的樣本變化，整棵樹的分裂結構就可能徹底改變（高變異性）。 |
+| **🎯 應用場景** | 1. **企業規則引擎**：自動化審核退退貨、核貸等具備清晰法規規則的系統。<br>2. **簡單醫療處方推薦**：醫生診斷流程（如「是否發燒？」➔「是否咳嗽？」➔「給予A藥」）。 |`,
+        quiz: [
+          {
+            question: "CART 決策樹在分類任務中，用來評估節點分裂「不純度」的黃金指標是什麼？",
+            options: [
+              "均方誤差 (MSE)",
+              "吉尼係數 (Gini Impurity)",
+              "歐氏距離 (Euclidean Distance)",
+              "解釋變異數比 (Explained Variance)"
+            ],
+            answer: 1,
+            explanation: "CART（分類與迴歸樹）在進行分類分裂時，主要使用「吉尼不純度（Gini Impurity）」來衡量一個節點內類別的分散程度，目標是尋找能讓子節點吉尼係數最小化（最純）的分裂點。"
+          },
+          {
+            question: "決策樹非常容易產生過度配適。實務上為了抑制這個缺點，我們通常會採取什麼對策？",
+            options: [
+              "無限增加樹的深度與節點數量",
+              "手動刪除 90% 以上的訓練資料",
+              "進行「預先剪枝（如限制 max_depth）」或「事後剪枝」",
+              "強制將資料全部轉換成類別型特徵"
+            ],
+            answer: 2,
+            explanation: "限制樹的最大深度（max_depth）、設定葉子節點最小樣本數等（稱為預先剪枝），或者在樹建構完後剪除對泛化無貢獻的分支（事後剪枝），是防止決策樹長得太深、過度擬合訓練資料的經典方法。"
+          }
+        ]
+      },
+      {
+        id: "support_vector_machines",
+        title: "支持向量機 (SVM)",
+        keywords: ["支持向量機", "SVM", "核函數", "Kernel", "最大邊界", "超平面"],
+        summary: "在高維空間尋找一個能將資料分得最開的超平面，並透過核函數解決非線性分類問題。",
+        content: `### 🛡️ 支持向量機 (Support Vector Machines, SVM)
+
+SVM 的目標是在空間中找到一個**最優決策邊界（超平面）**，使得不同類別最近的樣本點到此邊界邊的距離（邊界, Margin）最大化。
+
+#### 1. 支持向量 (Support Vectors)
+只有那些最靠近決策超平面的樣本點（支持向量）才會影響超平面的決定。在中央實驗室中，**帶有亮黃色發光外環的數據點**即為支持向量！
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **幾何泛化極佳**：最大化邊界（Margin）理論給予其在未知測試集上極佳的泛化鲁棒性。<br>2. **核函數降維妙招**：透過核技巧（Kernel Trick）能將非線性問題低運算成本地轉換至高維線性可分。<br>3. **對噪聲點鲁棒**：決策邊界僅由極少數的「支持向量」決定，遠處的雜訊點完全不影響模型。 |
+| **🔴 缺點限制** | 1. **訓練成本極大**：在大規模數據集（如數十萬筆以上）上，計算二次規劃（QP）問題的記憶體與運算成本極高。<br>2. **超參數調校敏感**：對於懲罰參數 $C$ 與核函數參數（如 $\gamma$）極為敏感，需要花費大量時間進行 Grid Search。 |
+| **🎯 應用場景** | 1. **圖像分類與人臉識別**：在小規模圖像高維特徵下有極佳分類表現。<br>2. **生物資訊與基因分類**：處理高維度、小樣本的基因表達譜晶片分類。<br>3. **文本分類與情感分析**：SVM 能高效處理高維的詞袋空間特徵。 |`,
+        quiz: [
+          {
+            question: "支持向量機（SVM）在幾何上的核心優化目標是什麼？",
+            options: [
+              "將所有數據點都投影到一個圓形的區間內",
+              "最大化決策超平面與最近數據點（支持向量）之間的幾何間距（Margin）",
+              "讓所有樣本點的均方誤差（MSE）達到最小",
+              "隨機打亂所有數據的特徵排序"
+            ],
+            answer: 1,
+            explanation: "SVM 的核心設計哲學在於「最大化邊界」（Margin Maximization）。它尋找一個超平面，使得離超平面最近的樣本點（即支持向量）到超平面的幾何距離達到最大，這能為模型提供最強的抗噪性與泛化能力。"
+          },
+          {
+            question: "關於 SVM 中的核技巧（Kernel Trick），以下敘述何者正確？",
+            options: [
+              "它只能在低維度進行無效的特徵相加",
+              "它在低維空間非線性可分時，無須在高維空間進行實際的高運算映射，即可隱式計算出高維特徵內積",
+              "核技巧的主要作用是加速 OLS 矩陣求逆",
+              "核技巧強制模型必須是二元決策樹"
+            ],
+            answer: 1,
+            explanation: "核技巧的精妙之處在於，它透過一個核函數 $K(x_i, x_j)$，在不需要將低維特徵顯式轉換至高維度（避免維度災難與記憶體爆炸）的前提下，隱式地計算出映射到高維後的向量內積，大幅降低了非線性 SVM 的運算成本。"
+          }
+        ]
+      },
+      {
+        id: "naive_bayes",
+        title: "單純貝氏 (Naive Bayes)",
+        keywords: ["單純貝氏", "貝氏定理", "Naive Bayes", "條件機率", "特徵獨立假設"],
+        summary: "基於貝氏定理並強烈假設所有特徵皆彼此獨立，速度極快，常用於文字與垃圾郵件分類。",
+        content: `### 📊 單純貝氏 (Naive Bayes)
+
+單純貝氏是基於**貝氏定理**的機率分類法，其核心在於「單純 (Naive)」的假設：**所有特徵在類別給定下均為條件獨立**。
+
+#### 1. 貝氏定理公式
+我們要計算給定特徵 $\\mathbf{x}$ 時，屬於類別 $y$ 的後驗機率：
+$$P(y|\\mathbf{x}) = \\frac{P(\\mathbf{x}|y) P(y)}{P(\\mathbf{x})}$$
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **驚人的極速**：由於假設特徵獨立，聯合機率可直接相乘，訓練與預測速度世界第一。<br>2. **高維特徵剋星**：非常適合特徵數量極大、但樣本數相對較小的場景（如文本分類中成千上萬的單字變數）。<br>3. **對噪聲不敏感**：數學公式基礎紮實，不容易受微小噪聲點干擾。 |
+| **🔴 缺點限制** | 1. **特徵獨立性假設失真**：真實世界中特徵極少獨立（如「買嬰兒尿布」與「買奶粉」高度相關），假設失真會使預測的絕對概率值偏差較大。<br>2. **零機率危機 (Zero Probability)**：若測試集中出現訓練集完全未曾有過的字詞特徵，會導致乘積機率直接歸零。 |
+| **🎯 應用場景** | 1. **垃圾郵件過濾**：歷史上最經典的黃金垃圾郵件分類器。<br>2. **新聞與文本分類**：快速給予海量文章進行「體育/政治/娛樂」標籤化。<br>3. **情感極性判定**：根據評論中高頻詞彙，快速判斷屬於正面還是負面評價。 |`,
+        quiz: [
+          {
+            question: "單純貝氏（Naive Bayes）中，「單純（Naive）」一詞主要源自於哪一個強烈的數學假設？",
+            options: [
+              "假設所有特徵之間完全不相關且在給定類別下彼此條件獨立",
+              "假設所有的數據點都在同一直線上分佈",
+              "假設數據集絕對沒有任何缺失值",
+              "假設這是一個非監督式學習任務"
+            ],
+            answer: 0,
+            explanation: "「單純」指的是它做了一個在現實中極難成立的簡化假設：即「所有輸入特徵在類別給定的前提下，彼此都是條件獨立的」。這能將複雜的聯合概率拆解為各個特徵概率的簡單相乘，大幅簡化運算。"
+          },
+          {
+            question: "在單純貝氏中，如果某個特徵（例如一個單字）在測試集中出現，但在訓練集的 A 類別中從未看過（頻率為0），會造成什麼後果？該如何解決？",
+            options: [
+              "模型會自動當機；必須重新手動收集資料",
+              "會導致該類別的聯合相乘機率直接變為 0 ；可使用「拉普拉斯平滑（Laplace Smoothing）」在分子加 1 來解決",
+              "模型會自動將該點標記為正確；不需做任何調整",
+              "會促使系統自動關閉 API 連線"
+            ],
+            answer: 1,
+            explanation: "因為單純貝氏是將所有特徵的概率相乘，任何一項為 0 都會導致整體概率歸零。為此，我們使用拉普拉斯平滑（常規做法是在頻率統計的分子加 1，分母加上特徵總種類數），確保即使是未見特徵也能有一個微小但非零的底線機率。"
+          }
+        ]
+      },
+      {
+        id: "knn_algorithm",
+        title: "K-Nearest Neighbors (KNN)",
+        keywords: ["KNN", "K近鄰", "K-Nearest Neighbors", "歐氏距離", "懶惰學習"],
+        summary: "極為直觀的「物以類聚」演算法。不需顯式訓練，直接根據最近的 K 個鄰居的多數決決定類別。",
+        content: `### 👥 K-Nearest Neighbors (KNN)
+
+KNN 是一種**非參數化 (Non-parametric)**、**惰性學習 (Lazy Learning)** 的監督式分類與迴歸演算法。
+
+#### 1. 歐氏距離 (Euclidean Distance)
+空間中直線距離：
+$$d(\\mathbf{p}, \\mathbf{q}) = \\sqrt{\\sum_{i=1}^{n} (p_i - q_i)^2}$$
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **最直觀直覺**：「物以類聚」思想，模型零假設，不需要建立任何數學邊界方程式。<br>2. **零訓練時間**：完全不需訓練（懶惰學習），新數據進來直接計算距離即可完成。<br>3. **天然非線性**：能適應極度不規則、多峰分佈的複雜決策空間。 |
+| **🔴 缺點限制** | 1. **預測速度龜速**：每次預測都要庫存訓練集所有的數據點並計算距離，資料量大時預測階段會卡死。<br>2. **記憶體黑洞**：必須將整套訓練數據集常駐在記憶體中。<br>3. **維度災難**：高維空間中「距離」的概念會失效，所有點的距離趨近等長，分類效果極差。 |
+| **🎯 應用場景** | 1. **推薦系統雛形**：尋找與特定使用者購買歷史最相近的鄰近 K 個使用者（協同過濾）。<br>2. **異常檢測第一步**：找出周遭鄰居極少的孤立點作為疑似詐欺異常行為。<br>3. **手寫字跡與圖案識別**：在圖像特徵維度不高時進行快速匹配。 |`,
+        quiz: [
+          {
+            question: "關於 K-Nearest Neighbors（KNN）演算法的運作機制，以下描述何者正確？",
+            options: [
+              "它在訓練階段需要花費極大的時間計算最優超平面",
+              "它是一種非參數化的惰性學習（Lazy Learning），不需要顯式的訓練階段，但預測時計算成本極高",
+              "It 對高維度特徵（如一萬個維度）有天生的免疫與絕佳優勢",
+              "K 值選擇得越小，模型的抗噪聲與抗過配適能力就越好"
+            ],
+            answer: 1,
+            explanation: "KNN 被稱為「懶惰學習」，因為它在訓練時僅僅是將資料存儲起來（時間複雜度為 0）。但當要預測新樣本時，它必須計算該樣本到記憶體中所有訓練點的距離並進行排序，因此預測階段非常耗時且消耗大量記憶體。"
+          },
+          {
+            question: "如果我們在執行 KNN 時將 $K$ 值設得極小（例如 $K=1$），最可能對模型造成什麼影響？",
+            options: [
+              "模型決策邊界會變得非常平滑，產生欠擬合（Underfitting）",
+              "模型預測速度會加快一百萬倍",
+              "決策邊界會變得極度敏感，容易被孤立的噪聲點干擾，產生高變異/過擬合（Overfitting）",
+              "模型會自動轉為 K-Means 分群"
+            ],
+            answer: 2,
+            explanation: "當 $K=1$ 時，模型完全跟隨最近的單一鄰居。這使得決策邊界極其曲折且不規則，容易被個別數據點中的雜訊拉扯，帶來極高變異（Variance）和過度配適。"
+          }
+        ]
+      },
+      {
+        id: "kmeans_clustering",
+        title: "K-Means 聚類演算法",
+        keywords: ["K-Means", "KMeans", "分群", "無監督學習", "質心"],
+        summary: "最著名的非監督式分群法，藉由反覆疊代分配點給最近的質心並更新質心，達成資料分群。",
+        content: `### 🎯 K-Means 聚類演算法
+
+K-Means 是最知名且被廣泛應用的**無監督式學習 (Unsupervised Learning)** 分群 (Clustering) 演算法。
+
+#### 1. 疊代核心 WCSS 衡量
+$$WCSS = \\sum_{j=1}^{K} \\sum_{\\mathbf{x} \\in C_j} \\|\\mathbf{x} - \\boldsymbol{\\mu}_j\\|^2$$
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **極度直觀且易實作**：邏輯簡單，在球形或凸狀分佈的聚類上收斂速度非常快。<br>2. **可擴展性佳**：演算法複雜度與資料量呈線性關係 $\\mathcal{O}(n \\cdot K \\cdot I)$，非常適合大數據分群。<br>3. **無監督利器**：不需要任何標籤資料即可在未知領域中自動分堆。 |
+| **🔴 缺點限制** | 1. **K值難定**：必須人為指定 $K$ 值（需要手肘法等經驗法則輔助）。<br>2. **初始值致命陷阱**：對隨機選擇的初始質心極度敏感，容易陷入「局部最優解」，無法保證全域最優。<br>3. **形狀局限性**：無法劃分複雜、非凸形（如月牙形、環形）的結構數據。 |
+| **🎯 應用場景** | 1. **客戶細分與畫像**：將海量電商消費者依照消費力、頻率自動劃分為高/中/低價值客群。<br>2. **圖像顏色壓縮 (Quantization)**：將圖像中數百萬種顏色分群，提取出最具代表性的 K 種顏色進行壓縮。<br>3. **地理位置站點劃分**：依據叫車乘客的分佈，合理劃分司機的最佳等候質心站點。 |`,
+        quiz: [
+          {
+            question: "K-Means 聚類演算法在決定最佳分群數 $K$ 時，最常用哪一種科學視覺化折線圖方法？",
+            options: [
+              "手肘法 (Elbow Method)",
+              "交叉驗證曲線 (Cross-validation curve)",
+              "ROC 曲線",
+              "特徵值累計解釋方差圖"
+            ],
+            answer: 0,
+            explanation: "手肘法透過繪製不同的 $K$ 與群內平方和（WCSS）的折線。隨著 $K$ 增大，WCSS 必然下降，而折線轉折最劇烈、狀似「手肘關節」的位置，通常就是最佳分群數 $K$。"
+          },
+          {
+            question: "K-Means 聚類最致命的缺陷之一是容易陷入局部最優解。實務上我們如何大幅改善這個隨機初始值帶來的致命缺陷？",
+            options: [
+              "手動刪除所有點，只保留質心",
+              "使用「K-Means++」初始化算法，讓初始質心彼此距離盡量拉開",
+              "限制最大疊代次數僅為 1 次",
+              "強制將 K 值永遠設為 1"
+            ],
+            answer: 1,
+            explanation: "標準 K-Means 是隨機選定初始質心，容易發生多個質心選在同個群組內部的慘劇。K-Means++ 改進了初始化：先隨機選第一個質心，而後續質心被選中的概率與其到現有質心的距離平方成正比，讓初始質心分佈得更均勻，大幅避免局部最優問題。"
+          }
+        ]
+      },
+      {
+        id: "random_forest",
+        title: "隨機森林 (Random Forest)",
+        keywords: ["隨機森林", "Random Forest", "Bagging", "袋裝法", "自助抽樣", "特徵重要度"],
+        summary: "集大成式的集成算法，結合了 Bagging 自助抽樣與隨機特徵選擇，建立多棵不相關的決策樹投票。",
+        content: `### 🌲🌲 隨機森林 (Random Forest)
+
+隨機森林屬於**集成學習 (Ensemble Learning)** 中的 **Bagging (Bootstrap Aggregating)** 技術。
+
+#### 1. 集成原理
+建立大量低相關、有差異的隨機決策樹，藉由其「森林共同決策投票」平均值，能有效降低變異（Variance），抵抗 Overfitting。
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **泛化性能之王**：由於雙重隨機性，模型極難發生過擬合（Overfitting），準確度極高。<br>2. **產出特徵重要度**：能自動評估哪些特徵對最終預測最有影響力，可解釋性比神經網路更佳。<br>3. **支援高並行計算**：每棵子樹彼此完全獨立，可以同時在多核心 CPU 上平行建構，訓練效率高。 |
+| **🔴 缺點限制** | 1. **預測慢且大**：包含數百棵大樹的森林，在預測時需要穿過所有樹，且佔用較大的硬碟與記憶體空間。<br>2. **失去單一樹的可解釋性**：雖然能知道特徵重要度，但我們再也無法像單一決策樹那樣清晰地畫出「IF-THEN」流向圖。 |
+| **🎯 應用場景** | 1. **信用風控與欺詐檢測**：各大金融機構審核信用卡盜刷與非法轉帳的經典常備基線模型。<br>2. **電子商務客戶流失預估**：預估客戶下個月是否會取消訂閱。<br>3. **疾病高風險特徵篩選**：從成千上萬個醫學檢查指標中篩選出最關鍵的治病因子。 |`,
+          quiz: [
+            {
+              question: "隨機森林（Random Forest）中的「雙重隨機性（Double Randomness）」具體指的是什麼？",
+              options: [
+                "隨機打亂數據行，並隨機刪除一半的特徵",
+                "隨機挑選訓練人員，並隨機選擇模型跑分",
+                "有放回地隨機抽樣樣本（Bootstrap），並在節點分裂時隨機挑選部分特徵子集進行優化",
+                "隨機將模型轉為線性迴歸，並隨機初始化權重"
+              ],
+              answer: 2,
+              explanation: "隨機森林之所以能訓練出極具「差異性（不相關）」的決策子樹，關鍵在於：1. 樣本隨機（利用 Bootstrap 有放回抽樣建立子訓練集）；2. 特徵隨機（節點分裂時不看所有特徵，僅隨機挑選部分特徵進行優化分裂）。"
+            },
+            {
+              question: "隨機森林在集成學習（Ensemble Learning）中，主要屬於哪一種核心集成技術？",
+              options: [
+                "Boosting (提升法)",
+                "Bagging (袋裝法/並行套袋)",
+                "Stacking (堆疊法)",
+                "Dimensionality Reduction (降維)"
+              ],
+              answer: 1,
+              explanation: "隨機森林是 Bagging（Bootstrap Aggregating）的極致延伸。Bagging 最大的特點在於各個弱分類器（決策樹）之間「完全平行、互不干擾」，最後透過多數決投票或平均來共同降低變異（Variance）。"
+            }
+          ]
+        },
+      {
+        id: "boosting_algorithms",
+        title: "梯度提升與 AdaBoost (Boosting)",
+        keywords: ["Boosting", "AdaBoost", "GBDT", "XGBoost", "梯度提升", "權重調整", "殘差"],
+        summary: "這類 Boosting 演算法透過序列化地訓練多個弱分類器，每一代皆致力於修復上一代產生的預測殘差與錯誤。",
+        content: `### 🚀 梯度提升與 AdaBoost (Boosting)
+
+    與 Bagging 不同，**Boosting (提升法)** 樹與樹之間具有前後因果關係。
+
+    #### 1. 擬合殘差
+    每一個新模型都是在努力修正前一代留下的預測誤差，將殘差往負梯度反方向推：
+    $$y_{\\text{residual}}^{(i)} = y^{(i)} - F_{m-1}(\\mathbf{x}^{(i)})$$
+
+    ---
+
+    ### 🔍 演算法深入評析
+
+    | 評估維度 | 詳細說明 |
+    | :--- | :--- |
+    | **🟢 優點優勢** | 1. **極致的精準度**：在結構化、表格化資料（Kaggle 競賽）中，XGBoost、LightGBM 等 Boosting 家族在非深度學習算法中近乎無敵。<br>2. **極強的表達能力**：透過連續序列式弱分類器擬合誤差，能逼近極其複雜的函數邊界。<br>3. **偏差顯著降低**：相較於 Bagging，Boosting 能在每一步中強效降低偏差（Bias）。 |
+    | **🔴 缺點限制** | 1. **容易過擬合**：如果弱分類器太強或者學習率（Eta）過高，Boosting 會強行去擬合雜訊與異常值，產生 Overfitting。<br>2. **無法並行訓練**：由於後一棵樹高度依賴前一棵樹的預測結果，模型必須序列式建立，訓練速度慢（雖 XGBoost 內部特徵分裂可並行，但樹本身無法並行）。 |
+    | **🎯 應用場景** | 1. **Kaggle 競賽大殺器**：處理各類結構化報表競賽的常備獲勝模型。<br>2. **搜尋引擎排序 (LTR)**：評估網頁與使用者檢索字詞的相關度排名。<br>3. **使用者點擊率與高價值客戶預測**：在廣告與推薦系統中進行精細化機率預估。 |`,
+          quiz: [
+            {
+              question: "關於 Boosting（提升法）的核心原理，以下描述何者正確？",
+              options: [
+                "所有決策樹都是完全平行建構，彼此毫無先後順序與因果關聯",
+                "每一代的新模型都在努力擬合上一代產生的預測誤差或殘差（Residuals），序列化地進行學習",
+                "它主要透過取平均值來增加偏差",
+                "它不支援任何分類任務，僅能做特徵降維"
+              ],
+              answer: 1,
+              explanation: "Boosting 採序列化（Sequential）的訓練機制。其哲學是「承先啟後」，每一棵新樹都在嘗試改正前一棵樹的錯誤（例如調高答錯樣本的權重，或直接以殘差作為新擬合目標），從而將多個弱分類器提升為一個極強的強分類器。"
+            },
+            {
+              question: "當代工業界與 Kaggle 競賽中最著名的 GBDT（梯度提升樹）延伸變體不包含以下哪一個？",
+              options: [
+                "XGBoost",
+                "LightGBM",
+                "CatBoost",
+                "Ordinary Least Squares (OLS)"
+              ],
+              answer: 3,
+              explanation: "XGBoost、LightGBM 與 CatBoost 都是基於梯度提升樹（GBDT）理論所演進、在工程與並行運算上做極致優化的現代大殺器。而 OLS（最小平方法）則是經典線性迴歸的解析求解法，不屬於 Boosting 家族。"
+            }
+          ]
+        },
+      {
+        id: "pca_dimension",
+        title: "主成分分析 (PCA)",
+        keywords: ["PCA", "主成分分析", "降維", "特徵值", "特徵向量", "共變異數矩陣"],
+        summary: "經典的線性降維技術，透過投影將高維度資料轉換到變異數最大化的新正交子空間。",
+        content: `### 📉 主成分分析 (Principal Component Analysis, PCA)
+
+PCA 是一種強大的**無監督式維度縮減 (Dimensionality Reduction)** 技術。
+
+#### 1. 共變異數矩陣
+$$\\mathbf{\\Sigma} = \\frac{1}{m} \\mathbf{X}^T \\mathbf{X}$$
+
+---
+
+### 🔍 演算法深入評析
+
+| 評估維度 | 詳細說明 |
+| :--- | :--- |
+| **🟢 優點優勢** | 1. **消除多重共線性**：轉換後的新特徵（主成分）彼此正交垂直，完美消除特徵變數間相互重疊影響的共線性問題。<br>2. **加速後續訓練**：在不遺失過多關鍵資訊的前提下，將幾百維特徵壓縮至幾維，大幅提高後續複雜模型（如神經網路）的訓練時效。<br>3. **直觀視覺化**：能將幾十維的高維複雜資料壓縮至 2D 或 3D 進行繪圖觀測。 |
+| **🔴 缺點限制** | 1. **失去物理業務含義**：降維後的主成分是原始多個特徵的線性組合，我們無法用直觀常理去解釋「PC1 維度到底代表什麼現實意義」。<br>2. **對非線性降維無力**：只能處理線性投影，若資料呈現複雜非線性流形分佈（如瑞士捲狀），降維效果不佳（此時應改用 t-SNE 或 Kernel PCA）。 |
+| **🎯 應用場景** | 1. **人臉特徵提取 (Eigenfaces)**：將圖像像素矩陣投影至低維度特徵空間進行人臉辨識。<br>2. **特徵預處理與降噪**：在進行分類模型前，先用 PCA 剔除共變異數極小的噪聲雜訊特徵。<br>3. **基因晶片高維特徵壓縮**：將數萬個基因特徵壓縮至數個主成分。 |`,
+        quiz: [
+          {
+            question: "主成分分析（PCA）降維演算法在尋找新投影方向（主成分）時，其首要的數學目標是什麼？",
+            options: [
+              "在投影後的正交子空間中，最大化資料點的變異數（Variance），以完整保留最多原始資訊",
+              "將所有資料點強行拉到一條對角線上",
+              "隨機過濾掉一半的數據點",
+              "最大化 Gini 係數以提高分類純度"
+            ],
+            answer: 0,
+            explanation: "PCA 的物理意涵是「投影後保留最大變異數」。因為變異數代表資訊量，PCA 尋找那些能讓投影點最為發散、解釋力最高的新正交軸，從而把大部分資訊保留在最前面的幾個主成分中。"
+          },
+          {
+            question: "主成分分析（PCA）轉換所得的各主成分（如 PC1, PC2...）之間，幾何關係與統計關係是什麼？",
+            options: [
+              "彼此高度相關且共線性極強",
+              "彼此互相正交垂直，且統計上彼此不相關，消除了多重共線性",
+              "彼此呈 45 度夾角",
+              "其總變異數永遠為 0"
+            ],
+            answer: 1,
+            explanation: "PCA 透過對共變異數矩陣進行特徵分解，導出的特徵向量全部互為「正交垂直」。這代表新生成的所有主成分特徵在統計上完全不相關，能完美消除原特徵矩陣中棘手的多重共線性（Multicollinearity）。"
+          }
+        ]
+      },
+      {
+        id: "bias_variance",
+        title: "核心觀念：偏差與變異取捨",
+        keywords: ["偏差", "變異", "Bias", "Variance", "過度配適", "Underfitting", "Overfitting"],
+        summary: "機器學習泛化效能的關鍵剖析，平衡模型太簡單（高偏差）或太複雜（高變異）兩端天平。",
+        content: `### ⚖️ 偏差與變異的取捨 (Bias-Variance Tradeoff)
+
+模型的「泛化誤差」可拆分為三個來源：
+
+$$Error = Bias^2 + Variance + Irreducible Error$$
+
+---
+
+### 🔍 核心概念解析
+
+| 指標變數 | 現實物理特徵 |
+| :--- | :--- |
+| **🔴 高偏差 (High Bias)** | **代表狀態：欠擬合 (Underfitting)**。<br>模型對規律過於遲鈍，假定太簡單（如用直線擬合正弦波），導致在訓練集和測試集上的表現都極差。 |
+| **🔵 高變異 (High Variance)** | **代表狀態：過擬合 (Overfitting)**。<br>模型過於靈活，記住了訓練集裡微小的噪點與細節，導致在訓練集上分數極高，但到了測試集上一落千丈。 |
+
+#### ⚖️ 天平的平衡
+
+為了在實務上獲得最佳泛化模型，我們必須拿捏這兩端的平衡，將泛化誤差降至最低：
+
+| 模型與資料調整 | Bias 變化 | Variance 變化 |
+| :--- | :--- | :--- |
+| **增加特徵 / 提高模型複雜度** | 降低 (變得更靈活) | 升高 (容易鑽牛角尖) |
+| **增加訓練資料量** | 影響不大 | 降低 (減少極端雜訊干擾) |
+| **加入正則化 ($L_1 / L_2$)** | 稍微升高 | 大幅降低 |`,
+        quiz: [
+          {
+            question: "當一個預測模型處於欠擬合（Underfitting）狀態時，它通常伴隨著以下哪一種偏差與變異特徵？",
+            options: [
+              "低偏差 (Low Bias) 且高變異 (High Variance)",
+              "高偏差 (High Bias) 且低變異 (Low Variance)",
+              "偏差與變異皆為 0",
+              "這與偏差、變異完全無關"
+            ],
+            answer: 1,
+            explanation: "欠擬合（Underfitting）意味著模型太過簡單。此時它對訓練數據和測試數據都預測得不准，表現為「高偏差」；但因為模型結構簡單（如一條死板的直線），其預測非常穩定，表現為「低變異」。"
+          },
+          {
+            question: "在機器學習模型中加入正則化技術（如 L1 或 L2 正則化），主要會帶來什麼效應？",
+            options: [
+              "強迫模型記住更多的局部噪聲",
+              "通常會稍微提高模型的偏差（Bias），但能大幅降低模型的變異（Variance），有效抑制過度配適",
+              "將模型直接轉換成非監督式學習",
+              "完全消除不可避免誤差（Irreducible Error）"
+            ],
+            answer: 1,
+            explanation: "正則化（Regularization）透過在損失函數中加入對權重參數大小的懲罰（Penalty）。這會限制模型的靈活性（使其朝簡單化發展），雖然這可能稍微增加偏差（Bias），但能顯著約束模型，大幅降低變異（Variance），是抗過擬合的核心大招。"
+          }
+        ]
+      }
+    ];
+
+    // Bottom Recommended Chips
+    const recommendedChips = [
+      "什麼是偏差與變異的取捨？",
+      "線性迴歸與邏輯斯迴歸有何主要差異？",
+      "決策樹如何進行基尼分裂？",
+      "支持向量機的核函數是什麼？",
+      "K-Means 如何更新質心位置？",
+      "隨機森林與 Boosting 有何不同？"
+    ];
+
+    const providerConfig = {
+      gemini: {
+        title: "Gemini",
+        keyName: "gemini_api_key",
+        defaultModel: "gemini-2.5-flash-preview-09-2025",
+        models: [
+          { value: "gemini-2.5-flash-lite", label: "Gemini 2.5 Flash-Lite" },
+          { value: "gemini-2.5-flash-preview-09-2025", label: "Gemini 2.5 Flash" },
+          { value: "gemini-2.5-pro", label: "Gemini 2.5 Pro (推薦強大推理)" }
+        ]
+      },
+      openai: {
+        title: "OpenAI",
+        keyName: "openai_api_key",
+        defaultModel: "gpt-4o-mini",
+        models: [
+          { value: "gpt-4o-mini", label: "gpt-4o-mini" },
+          { value: "gpt-4o", label: "gpt-4o" }
+        ]
+      },
+      anthropic: {
+        title: "Anthropic",
+        keyName: "anthropic_api_key",
+        defaultModel: "claude-3-5-haiku-latest",
+        models: [
+          { value: "claude-3-5-haiku-latest", label: "Claude 3.5 Haiku" },
+          { value: "claude-3-5-sonnet-latest", label: "Claude 3.5 Sonnet" }
+        ]
+      }
+    };
+
+    // ----------------- (3) APPLICATION STATE -----------------
+    let currentProvider = 'gemini';
+    let loadedKeys = {
+      gemini: localStorage.getItem('gemini_api_key') || '',
+      openai: localStorage.getItem('openai_api_key') || '',
+      anthropic: localStorage.getItem('anthropic_api_key') || ''
+    };
+    let activeModels = {
+      gemini: localStorage.getItem('gemini_model') || providerConfig.gemini.defaultModel,
+      openai: localStorage.getItem('openai_model') || providerConfig.openai.defaultModel,
+      anthropic: localStorage.getItem('anthropic_model') || providerConfig.anthropic.defaultModel
+    };
+
+    let activeAlgorithmId = "all_intro";
+    let activeSubTab = "handbook"; // "handbook" or "quiz"
+
+    // Quiz Session States
+    let currentQuizState = {
+      questions: [],
+      currentIdx: 0,
+      userAnswers: [], // null, or option index
+      score: 0,
+      answered: false
+    };
+
+    // ----------------- (4) SIMULATOR ENGINE (VANILLA CANVAS STATE) -----------------
+    let simPoints = [];
+    let simCentroids = [];
+    let simK = 3;
+    let simParams = {};
+
+    const canvas = document.getElementById('sim-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Make canvas sharp & responsive
+    function resizeCanvas() {
+      const rect = canvas.parentNode.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height || 300;
+      redrawSimulator();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initial default mock data generation
+    function generateMockPoints(type) {
+      simPoints = [];
+      const w = canvas.width || 400;
+      const h = canvas.height || 300;
+      
+      if (type === 'linear_regression') {
+        for (let i = 0; i < 15; i++) {
+          const x = 50 + Math.random() * (w - 100);
+          const y = h - (x * 0.45 + 30 + (Math.random() - 0.5) * 45);
+          simPoints.push({ x, y });
+        }
+      } 
+      else if (['logistic_regression', 'support_vector_machines', 'decision_trees', 'naive_bayes', 'random_forest', 'boosting_algorithms'].includes(type)) {
+        // Red vs Blue clusters
+        for (let i = 0; i < 10; i++) {
+          simPoints.push({ x: 50 + Math.random() * (w/2 - 70), y: 50 + Math.random() * (h - 100), label: 0 }); // Class 0
+          simPoints.push({ x: w/2 + 20 + Math.random() * (w/2 - 70), y: 50 + Math.random() * (h - 100), label: 1 }); // Class 1
+        }
+      } 
+      else if (type === 'knn_algorithm') {
+        for (let i = 0; i < 12; i++) {
+          simPoints.push({ x: 60 + Math.random() * (w/2 - 90), y: 60 + Math.random() * (h - 120), label: 0 }); 
+          simPoints.push({ x: w/2 + 30 + Math.random() * (w/2 - 90), y: h/2 + Math.random() * (h/2 - 60), label: 1 }); 
+        }
+      } 
+      else if (type === 'kmeans_clustering') {
+        const centers = [
+          { x: w * 0.25, y: h * 0.35 },
+          { x: w * 0.75, y: h * 0.45 },
+          { x: w * 0.5, y: h * 0.75 }
+        ];
+        centers.forEach((center, idx) => {
+          for (let i = 0; i < 8; i++) {
+            simPoints.push({
+              x: center.x + (Math.random() - 0.5) * 50,
+              y: center.y + (Math.random() - 0.5) * 50,
+              cluster: -1
+            });
+          }
+        });
+        simCentroids = [
+          { x: w * 0.2, y: h * 0.6, color: '#ef4444' },
+          { x: w * 0.5, y: h * 0.2, color: '#3b82f6' },
+          { x: w * 0.8, y: h * 0.7, color: '#10b981' }
+        ];
+      } 
+      else if (type === 'pca_dimension') {
+        for (let i = 0; i < 22; i++) {
+          const t = (Math.random() - 0.5) * 160;
+          const noise = (Math.random() - 0.5) * 25;
+          simPoints.push({
+            x: w/2 + t * 0.866 - noise * 0.5,
+            y: h/2 + t * 0.5 + noise * 0.866
+          });
+        }
+      }
+    }
+
+    // Canvas click to add points
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      if (['linear_regression', 'kmeans_clustering'].includes(activeAlgorithmId)) {
+        simPoints.push({ x, y, cluster: -1 });
+        redrawSimulator();
+      } else if (['logistic_regression', 'support_vector_machines', 'decision_trees', 'naive_bayes', 'random_forest', 'boosting_algorithms'].includes(activeAlgorithmId)) {
+        const label = simParams.activeClass !== undefined ? simParams.activeClass : 0;
+        simPoints.push({ x, y, label });
+        redrawSimulator();
+      } else if (activeAlgorithmId === 'knn_algorithm') {
+        simParams.queryPoint = { x, y };
+        redrawSimulator();
+      }
+    });
+
+    // Helper functions for Decision Tree Splitting
+    function calculateGini(pts) {
+      if (pts.length === 0) return 0;
+      const c0 = pts.filter(p => p.label === 0).length;
+      const c1 = pts.length - c0;
+      const p0 = c0 / pts.length;
+      const p1 = c1 / pts.length;
+      return 1.0 - (p0 * p0 + p1 * p1);
+    }
+
+    function findBestSplit(pts) {
+      let bestGini = 1.0;
+      let bestSplit = null; // { axis: 'x'|'y', value: val }
+
+      pts.forEach(p => {
+        // Try split on X
+        let left = pts.filter(pt => pt.x < p.x);
+        let right = pts.filter(pt => pt.x >= p.x);
+        let giniX = (left.length * calculateGini(left) + right.length * calculateGini(right)) / pts.length;
+        if (giniX < bestGini) {
+          bestGini = giniX;
+          bestSplit = { axis: 'x', value: p.x };
+        }
+
+        // Try split on Y
+        let top = pts.filter(pt => pt.y < p.y);
+        let bottom = pts.filter(pt => pt.y >= p.y);
+        let giniY = (top.length * calculateGini(top) + bottom.length * calculateGini(bottom)) / pts.length;
+        if (giniY < bestGini) {
+          bestGini = giniY;
+          bestSplit = { axis: 'y', value: p.y };
+        }
+      });
+      return bestSplit;
+    }
+
+    // Build decision tree recursively up to depth
+    function getTreeRegions(pts, xMin, xMax, yMin, yMax, depth, maxDepth) {
+      if (pts.length === 0) return [];
+      const count0 = pts.filter(p => p.label === 0).length;
+      const count1 = pts.length - count0;
+      const pred = count0 >= count1 ? 0 : 1;
+
+      if (depth >= maxDepth || calculateGini(pts) === 0) {
+        return [{ xMin, xMax, yMin, yMax, pred }];
+      }
+
+      const split = findBestSplit(pts);
+      if (!split) return [{ xMin, xMax, yMin, yMax, pred }];
+
+      if (split.axis === 'x') {
+        let leftPts = pts.filter(p => p.x < split.value);
+        let rightPts = pts.filter(p => p.x >= split.value);
+        return [
+          ...getTreeRegions(leftPts, xMin, split.value, yMin, yMax, depth + 1, maxDepth),
+          ...getTreeRegions(rightPts, split.value, xMax, yMin, yMax, depth + 1, maxDepth)
+        ];
+      } else {
+        let topPts = pts.filter(p => p.y < split.value);
+        let botPts = pts.filter(p => p.y >= split.value);
+        return [
+          ...getTreeRegions(topPts, xMin, xMax, yMin, split.value, depth + 1, maxDepth),
+          ...getTreeRegions(botPts, xMin, xMax, split.value, yMax, depth + 1, maxDepth)
+        ];
+      }
+    }
+
+    // Redraw based on current selected ML Algorithm
+    function redrawSimulator() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Draw grid
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let i = 20; i < w; i += 20) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke();
+      }
+      for (let i = 20; i < h; i += 20) {
+        ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke();
+      }
+
+      const drawPoint = (p, color, r = 5, border = '#ffffff') => {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = border;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      };
+
+      if (activeAlgorithmId === 'all_intro') {
+        ctx.fillStyle = '#10b981';
+        ctx.font = '13px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('機器學習智慧學習助理研讀實驗室', w / 2, h / 2 - 10);
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px sans-serif';
+        ctx.fillText('請點選左側目錄或點擊右邊問答，即可於此面板親自動手操作演算法圖表。', w / 2, h / 2 + 15);
+      }
+
+      else if (activeAlgorithmId === 'linear_regression') {
+        simPoints.forEach(p => drawPoint(p, '#3b82f6'));
+
+        if (simPoints.length > 1) {
+          let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+          simPoints.forEach(p => {
+            sumX += p.x; sumY += p.y;
+            sumXY += p.x * p.y; sumXX += p.x * p.x;
+          });
+          const n = simPoints.length;
+          const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+          const intercept = (sumY - slope * sumX) / n;
+
+          ctx.strokeStyle = '#10b981';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(0, intercept);
+          ctx.lineTo(w, slope * w + intercept);
+          ctx.stroke();
+
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '10px monospace';
+          ctx.textAlign = 'left';
+          ctx.fillText(`公式解析解: y = ${(-slope).toFixed(2)}x + ${(h - intercept).toFixed(1)}`, 15, 20);
+        }
+      }
+
+      else if (activeAlgorithmId === 'logistic_regression') {
+        const bias = simParams.bias || 0;
+        const weight = simParams.weight || 0.5;
+
+        simPoints.forEach(p => {
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+        });
+
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(0, h/2 - bias - (weight * -w/2));
+        ctx.lineTo(w, h/2 - bias - (weight * w/2));
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      else if (activeAlgorithmId === 'decision_trees') {
+        const depth = simParams.treeDepth || 2;
+        const regions = getTreeRegions(simPoints, 0, w, 0, h, 0, depth);
+        
+        regions.forEach(r => {
+          ctx.fillStyle = r.pred === 0 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)';
+          ctx.fillRect(r.xMin, r.yMin, r.xMax - r.xMin, r.yMax - r.yMin);
+          ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+          ctx.strokeRect(r.xMin, r.yMin, r.xMax - r.xMin, r.yMax - r.yMin);
+        });
+
+        simPoints.forEach(p => {
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+        });
+      }
+
+      else if (activeAlgorithmId === 'support_vector_machines') {
+        simPoints.forEach(p => {
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+        });
+
+        const C = simParams.svmC || 1.0;
+        const slope = -0.55;
+        const yOffset = h / 2 + 15;
+        const marginWidth = 35 / C;
+
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(0, yOffset - slope * (w/2));
+        ctx.lineTo(w, yOffset + slope * (w/2));
+        ctx.stroke();
+
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(0, (yOffset - marginWidth) - slope * (w/2));
+        ctx.lineTo(w, (yOffset - marginWidth) + slope * (w/2));
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, (yOffset + marginWidth) - slope * (w/2));
+        ctx.lineTo(w, (yOffset + marginWidth) + slope * (w/2));
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        simPoints.forEach(p => {
+          const distToLine = Math.abs(p.y - (yOffset + slope * (p.x - w/2)));
+          if (Math.abs(distToLine - marginWidth) < 22) {
+            ctx.strokeStyle = '#eab308';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 9, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+        });
+      }
+
+      else if (activeAlgorithmId === 'naive_bayes') {
+        const densityX = 12;
+        const densityY = 12;
+        
+        const pts0 = simPoints.filter(p => p.label === 0);
+        const pts1 = simPoints.filter(p => p.label === 1);
+
+        const getStats = (pts) => {
+          if (pts.length === 0) return { mx: w/2, my: h/2, sx: 50, sy: 50 };
+          let mx = pts.reduce((sum, p) => sum + p.x, 0) / pts.length;
+          let my = pts.reduce((sum, p) => sum + p.y, 0) / pts.length;
+          let sx = Math.sqrt(pts.reduce((sum, p) => sum + (p.x - mx)**2, 0) / pts.length) || 10;
+          let sy = Math.sqrt(pts.reduce((sum, p) => sum + (p.y - my)**2, 0) / pts.length) || 10;
+          return { mx, my, sx, sy };
+        };
+
+        const s0 = getStats(pts0);
+        const s1 = getStats(pts1);
+
+        const gaussianProb = (x, y, stats) => {
+          const px = Math.exp(-((x - stats.mx) ** 2) / (2 * stats.sx * stats.sx)) / (Math.sqrt(2 * Math.PI) * stats.sx);
+          const py = Math.exp(-((y - stats.my) ** 2) / (2 * stats.sy * stats.sy)) / (Math.sqrt(2 * Math.PI) * stats.sy);
+          return px * py;
+        };
+
+        const prior0 = pts0.length / (simPoints.length || 1);
+        const prior1 = pts1.length / (simPoints.length || 1);
+
+        for (let x = 0; x < w; x += densityX) {
+          for (let y = 0; y < h; y += densityY) {
+            const p0 = gaussianProb(x, y, s0) * prior0;
+            const p1 = gaussianProb(x, y, s1) * prior1;
+            const sum = p0 + p1;
+            if (sum > 0) {
+              const weight0 = p0 / sum;
+              ctx.fillStyle = `rgba(${Math.floor(weight0 * 255)}, 50, ${Math.floor((1 - weight0) * 255)}, 0.15)`;
+              ctx.fillRect(x, y, densityX, densityY);
+            }
+          }
+        }
+
+        simPoints.forEach(p => {
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+        });
+      }
+
+      else if (activeAlgorithmId === 'knn_algorithm') {
+        simPoints.forEach(p => {
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+        });
+
+        const q = simParams.queryPoint || { x: w / 2, y: h / 2 };
+        drawPoint(q, '#10b981', 8, '#ffffff');
+
+        const K = simParams.knnK || 3;
+        const dists = simPoints.map((p, idx) => {
+          const d = Math.sqrt((p.x - q.x)**2 + (p.y - q.y)**2);
+          return { index: idx, dist: d, point: p };
+        });
+        dists.sort((a, b) => a.dist - b.dist);
+
+        let classCount0 = 0;
+        let classCount1 = 0;
+
+        for (let i = 0; i < Math.min(K, dists.length); i++) {
+          const target = dists[i].point;
+          ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(q.x, q.y);
+          ctx.lineTo(target.x, target.y);
+          ctx.stroke();
+
+          if (target.label === 0) classCount0++;
+          else classCount1++;
+        }
+
+        const finalClassColor = classCount0 > classCount1 ? '#ef4444' : '#3b82f6';
+        const finalClassName = classCount0 > classCount1 ? '紅色 (Class 0)' : '藍色 (Class 1)';
+        
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '10px sans-serif';
+        ctx.fillText(`最近鄰K = ${K} | 紅色鄰居: ${classCount0} | 藍色鄰居: ${classCount1}`, 15, 20);
+        ctx.fillStyle = finalClassColor;
+        ctx.fillText(`KNN 預測結果 ➔ ${finalClassName}`, 15, 36);
+      }
+
+      else if (activeAlgorithmId === 'kmeans_clustering') {
+        simPoints.forEach(p => {
+          const color = p.cluster !== -1 ? simCentroids[p.cluster].color : '#94a3b8';
+          drawPoint(p, color, 4.5);
+        });
+
+        simCentroids.forEach((c, idx) => {
+          ctx.fillStyle = c.color;
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.fillRect(c.x - 7, c.y - 7, 14, 14);
+          ctx.strokeRect(c.x - 7, c.y - 7, 14, 14);
+        });
+      }
+
+      else if (activeAlgorithmId === 'random_forest') {
+        const numTrees = simParams.forestTrees || 3;
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.15)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < numTrees; i++) {
+          const rX = 70 + (i * 12345 % (w - 140));
+          ctx.beginPath();
+          ctx.moveTo(rX, 0); ctx.lineTo(rX, h);
+          ctx.stroke();
+        }
+
+        simPoints.forEach(p => {
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+        });
+      }
+
+      else if (activeAlgorithmId === 'boosting_algorithms') {
+        const rounds = simParams.boostingRounds || 3;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 1.5;
+        for (let i = 1; i <= rounds; i++) {
+          const rY = (i * h) / (rounds + 1);
+          ctx.strokeStyle = i % 2 === 0 ? '#ef4444' : '#3b82f6';
+          ctx.beginPath();
+          ctx.moveTo(0, rY); ctx.lineTo(w, rY);
+          ctx.stroke();
+        }
+
+        simPoints.forEach(p => {
+          drawPoint(p, p.label === 0 ? '#ef4444' : '#3b82f6', 5);
+        });
+      }
+
+      else if (activeAlgorithmId === 'pca_dimension') {
+        let avgX = 0, avgY = 0;
+        simPoints.forEach(p => { avgX += p.x; avgY += p.y; });
+        avgX /= simPoints.length || 1;
+        avgY /= simPoints.length || 1;
+
+        const dx = 100;
+        const dy = 55;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(avgX - dx * 2, avgY - dy * 2);
+        ctx.lineTo(avgX + dx * 2, avgY + dy * 2);
+        ctx.stroke();
+
+        if (simParams.projectPCA) {
+          simPoints.forEach(p => {
+            const vx = p.x - avgX;
+            const vy = p.y - avgY;
+            const uLenSq = dx*dx + dy*dy;
+            const projT = (vx * dx + vy * dy) / uLenSq;
+            const projX = avgX + projT * dx;
+            const projY = avgY + projT * dy;
+
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(projX, projY); ctx.stroke();
+            drawPoint({ x: projX, y: projY }, '#10b981', 3.5, '#ffffff');
+          });
+        }
+
+        simPoints.forEach(p => drawPoint(p, '#3b82f6', 4.5));
+      }
+
+      else if (activeAlgorithmId === 'bias_variance') {
+        const centers = [
+          { x: w * 0.25, y: h * 0.3, label: "低偏差 / 低變異", bias: 0, var: 8 },
+          { x: w * 0.75, y: h * 0.3, label: "低偏差 / 高變異", bias: 0, var: 35 },
+          { x: w * 0.25, y: h * 0.75, label: "高偏差 / 低變異", bias: 38, var: 8 },
+          { x: w * 0.75, y: h * 0.75, label: "高偏差 / 高變異", bias: 38, var: 35 }
+        ];
+
+        centers.forEach(c => {
+          ctx.strokeStyle = '#334155';
+          ctx.lineWidth = 1.5;
+          for (let r = 50; r >= 10; r -= 15) {
+            ctx.beginPath(); ctx.arc(c.x, c.y, r, 0, Math.PI * 2); ctx.stroke();
+          }
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.35)';
+          ctx.beginPath(); ctx.arc(c.x, c.y, 8, 0, Math.PI * 2); ctx.fill();
+
+          ctx.fillStyle = '#10b981';
+          for (let i = 0; i < 8; i++) {
+            const angle = (i * 1.45) % (Math.PI * 2);
+            const dist = Math.sqrt((i * 117) % c.var);
+            const px = c.x + c.bias + Math.cos(angle) * dist;
+            const py = c.y - c.bias/2 + Math.sin(angle) * dist;
+            ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI * 2); ctx.fill();
+          }
+
+          ctx.fillStyle = '#cbd5e1';
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(c.label, c.x, c.y + 60);
+        });
+      }
+    }
+
+    // ----------------- (5) UI NAVIGATION & TAB CONTROLLER (Mobile Support) -----------------
+    function switchMobileView(view) {
+      const centerPane = document.getElementById('center-pane');
+      const simulatorCard = document.getElementById('pane-simulator');
+      const manualCard = document.getElementById('pane-manual');
+      const chatSidebar = document.getElementById('chat-sidebar');
+
+      // Manage Navigation Classes
+      ['manual', 'simulator', 'chat'].forEach(v => {
+        const btn = document.getElementById(`tab-nav-${v}`);
+        if (btn) {
+          if (v === view) {
+            btn.classList.add('border-brand-500', 'text-brand-500');
+            btn.classList.remove('border-transparent', 'text-slate-400');
+          } else {
+            btn.classList.remove('border-brand-500', 'text-brand-500');
+            btn.classList.add('border-transparent', 'text-slate-400');
+          }
+        }
+      });
+
+      // Decoupled panel hide/show states to prevent parent hidden scroll locks
+      if (view === 'manual') {
+        if (centerPane) centerPane.classList.remove('hidden');
+        if (simulatorCard) simulatorCard.classList.add('hidden');
+        if (manualCard) manualCard.classList.remove('hidden');
+        if (chatSidebar) {
+          chatSidebar.classList.add('hidden');
+          chatSidebar.classList.remove('flex', 'w-full');
+        }
+      } else if (view === 'simulator') {
+        if (centerPane) centerPane.classList.remove('hidden');
+        if (simulatorCard) simulatorCard.classList.remove('hidden');
+        if (manualCard) manualCard.classList.add('hidden');
+        if (chatSidebar) {
+          chatSidebar.classList.add('hidden');
+          chatSidebar.classList.remove('flex', 'w-full');
+        }
+        resizeCanvas(); // Refit canvas sizing
+      } else if (view === 'chat') {
+        if (centerPane) centerPane.classList.add('hidden');
+        if (chatSidebar) {
+          chatSidebar.classList.remove('hidden');
+          chatSidebar.classList.remove('hidden', 'lg:flex');
+          chatSidebar.classList.add('flex', 'w-full');
+        }
+      }
+    }
+
+    // Sub-tab Handbook vs Quiz switcher logic
+    function switchSubTab(tab) {
+      activeSubTab = tab;
+      const subtabHB = document.getElementById('subtab-handbook');
+      const subtabQZ = document.getElementById('subtab-quiz');
+      const hbContent = document.getElementById('report-content');
+      const qzContent = document.getElementById('quiz-content');
+
+      if (tab === 'handbook') {
+        if (subtabHB) subtabHB.className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white transition-all";
+        if (subtabQZ) subtabQZ.className = "px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-slate-200 transition-all";
+        if (hbContent) hbContent.classList.remove('hidden');
+        if (qzContent) qzContent.classList.add('hidden');
+      } else {
+        if (subtabHB) subtabHB.className = "px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-slate-200 transition-all";
+        if (subtabQZ) subtabQZ.className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-brand-600 text-white transition-all";
+        if (hbContent) hbContent.classList.add('hidden');
+        if (qzContent) qzContent.classList.remove('hidden');
+        renderQuiz();
+      }
+    }
+
+    // ----------------- (6) QUIZ SYSTEM CONTROLLER -----------------
+    function initQuizForActiveAlgo() {
+      const algo = localKnowledgeBase.find(item => item.id === activeAlgorithmId);
+      if (algo && algo.quiz) {
+        currentQuizState.questions = algo.quiz;
+      } else {
+        currentQuizState.questions = [];
+      }
+      currentQuizState.currentIdx = 0;
+      currentQuizState.userAnswers = Array(currentQuizState.questions.length).fill(null);
+      currentQuizState.score = 0;
+      currentQuizState.answered = false;
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById('quiz-content');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (currentQuizState.questions.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-10 space-y-2">
+            <p class="text-slate-400">本手冊導讀單元未設置隨堂測驗。</p>
+            <p class="text-xs text-slate-500">請選取左側各項「實體機器學習演算法」以展開知識測驗挑戰！</p>
+          </div>
+        `;
+        return;
+      }
+
+      const qIdx = currentQuizState.currentIdx;
+      const totalQ = currentQuizState.questions.length;
+      const q = currentQuizState.questions[qIdx];
+      const userAnswer = currentQuizState.userAnswers[qIdx];
+
+      // Progress Tracker Bar
+      let progressDots = '';
+      for (let i = 0; i < totalQ; i++) {
+        let dotColor = "bg-slate-800 border-slate-700";
+        if (i === qIdx) dotColor = "bg-brand-500/80 border-brand-400 ring-2 ring-brand-500/20";
+        else if (currentQuizState.userAnswers[i] !== null) {
+          const isCorrect = currentQuizState.userAnswers[i] === currentQuizState.questions[i].answer;
+          dotColor = isCorrect ? "bg-emerald-600 border-emerald-500" : "bg-red-600 border-red-500";
+        }
+        progressDots += `<div class="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold ${dotColor}">${i + 1}</div>`;
+      }
+
+      let optionsHTML = '';
+      q.options.forEach((opt, idx) => {
+        let optBg = "bg-slate-900/60 hover:bg-slate-800/80 border-slate-800";
+        let optBorder = "border-slate-800/80";
+        let optIcon = `<div class="w-4 h-4 rounded-full border border-slate-600 flex-shrink-0 flex items-center justify-center text-[9px] font-bold text-slate-400">${String.fromCharCode(65 + idx)}</div>`;
+
+        if (userAnswer !== null) {
+          // Submitted state
+          if (idx === q.answer) {
+            optBg = "bg-emerald-950/40 hover:bg-emerald-950/50 border-emerald-500/50 text-emerald-300";
+            optIcon = `<div class="w-4 h-4 rounded-full bg-emerald-500 text-slate-950 flex-shrink-0 flex items-center justify-center text-[9px] font-black">✓</div>`;
+          } else if (idx === userAnswer) {
+            optBg = "bg-red-950/40 hover:bg-red-950/50 border-red-500/50 text-red-300";
+            optIcon = `<div class="w-4 h-4 rounded-full bg-red-500 text-white flex-shrink-0 flex items-center justify-center text-[9px] font-black">✗</div>`;
+          } else {
+            optBg = "bg-slate-900/30 opacity-60 border-slate-900";
+          }
+        } else {
+          // Unsubmitted - check selection if active
+          if (simParams.selectedOption === idx) {
+            optBg = "bg-brand-950/40 hover:bg-brand-950/60 border-brand-500 text-brand-300 ring-1 ring-brand-500/30";
+            optIcon = `<div class="w-4 h-4 rounded-full bg-brand-500 text-slate-950 flex-shrink-0 flex items-center justify-center text-[9px] font-bold">${String.fromCharCode(65 + idx)}</div>`;
+          }
+        }
+
+        optionsHTML += `
+          <button onclick="selectQuizOption(${idx})" ${userAnswer !== null ? 'disabled' : ''} class="w-full text-left p-3 rounded-xl border ${optBg} flex items-center gap-3 transition-all">
+            ${optIcon}
+            <span class="text-[11px] leading-relaxed">${opt}</span>
+          </button>
+        `;
+      });
+
+      // Submit / Next Actions
+      let actionBtnHTML = '';
+      if (userAnswer === null) {
+        const canSubmit = simParams.selectedOption !== undefined;
+        actionBtnHTML = `
+          <button onclick="submitQuizAnswer()" ${!canSubmit ? 'disabled' : ''} class="w-full py-2 bg-brand-600 hover:bg-brand-500 disabled:opacity-40 disabled:hover:bg-brand-600 text-white font-bold rounded-xl transition-all shadow-md">
+            提交答案
+          </button>
+        `;
+      } else {
+        if (qIdx < totalQ - 1) {
+          actionBtnHTML = `
+            <button onclick="nextQuizQuestion()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition-all border border-slate-700">
+              下一題 ➔
+            </button>
+          `;
+        } else {
+          actionBtnHTML = `
+            <button onclick="showQuizSummary()" class="w-full py-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg">
+              查看測驗結算 🏆
+            </button>
+          `;
+        }
+      }
+
+      // Explanation Block
+      let explanationHTML = '';
+      if (userAnswer !== null) {
+        const isCorrect = userAnswer === q.answer;
+        const bannerTitle = isCorrect ? '🎉 答對了！非常完美' : '💡 答錯了，再接再厲！';
+        const bannerColor = isCorrect ? 'border-emerald-500/40 bg-emerald-950/20 text-emerald-300' : 'border-red-500/40 bg-red-950/20 text-red-300';
+        
+        explanationHTML = `
+          <div class="p-4 rounded-xl border ${bannerColor} space-y-2 mt-3 animate-fade-in">
+            <h4 class="font-bold text-[11px]">${bannerTitle}</h4>
+            <p class="text-[10px] text-slate-300 leading-relaxed">${q.explanation}</p>
+          </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="space-y-4 max-w-2xl mx-auto py-2">
+          
+          <!-- Top progress and score stats -->
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">隨堂測驗挑戰</span>
+            <div class="flex items-center gap-1.5">
+              ${progressDots}
+            </div>
+          </div>
+
+          <!-- Question Prompt -->
+          <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-800/80">
+            <h3 class="font-bold text-xs leading-relaxed text-slate-200">
+              Q${qIdx + 1}. ${q.question}
+            </h3>
+          </div>
+
+          <!-- Options Stack -->
+          <div class="space-y-2">
+            ${optionsHTML}
+          </div>
+
+          <!-- Action block -->
+          <div class="pt-2">
+            ${actionBtnHTML}
+          </div>
+
+          <!-- Explanation display -->
+          ${explanationHTML}
+
+        </div>
+      `;
+    }
+
+    function selectQuizOption(idx) {
+      simParams.selectedOption = idx;
+      renderQuiz();
+    }
+
+    function submitQuizAnswer() {
+      const qIdx = currentQuizState.currentIdx;
+      const q = currentQuizState.questions[qIdx];
+      const selected = simParams.selectedOption;
+
+      if (selected === undefined) return;
+
+      currentQuizState.userAnswers[qIdx] = selected;
+      if (selected === q.answer) {
+        currentQuizState.score++;
+      }
+
+      // Reset selection state
+      simParams.selectedOption = undefined;
+      renderQuiz();
+    }
+
+    function nextQuizQuestion() {
+      currentQuizState.currentIdx++;
+      renderQuiz();
+    }
+
+    function showQuizSummary() {
+      const container = document.getElementById('quiz-content');
+      if (!container) return;
+      
+      const totalQ = currentQuizState.questions.length;
+      const score = currentQuizState.score;
+      const pct = Math.round((score / totalQ) * 100);
+
+      let medal = '🥉';
+      let title = '初試啼聲';
+      let desc = '看來您還需要花費多一些時間閱覽報告並在數據實驗室手動調參測試喔！';
+      
+      if (pct === 100) { medal = '👑'; title = '機器學習大師'; desc = '太驚人了！您對這項演算法的核心細節、優缺點及數學公式掌握得無懈可擊！'; }
+      else if (pct >= 70) { medal = '🥇'; title = '資深工程師'; desc = '表現極其優異，您對大部份觀念都具備了極為清晰的直覺！'; }
+      else if (pct >= 50) { medal = '🥈'; title = '初級研究員'; desc = '及格了！您基本掌握了基本常識，建議多看一些優缺點對比增加敏銳度。'; }
+
+      container.innerHTML = `
+        <div class="text-center py-6 space-y-5 max-w-md mx-auto">
+          <div class="text-5xl animate-bounce">${medal}</div>
+          <div class="space-y-1">
+            <h3 class="text-base font-bold text-slate-100">${title} (${score}/${totalQ} 答對)</h3>
+            <p class="text-[10px] text-slate-500">測驗得分比率：${pct}%</p>
+          </div>
+
+          <div class="p-4 bg-slate-900/60 rounded-2xl border border-slate-800 text-[11px] text-slate-300 leading-relaxed">
+            ${desc}
+          </div>
+
+          <button onclick="restartQuiz()" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl text-xs transition-all shadow-md">
+            重新挑戰測驗 ↺
+          </button>
+        </div>
+      `;
+    }
+
+    function restartQuiz() {
+      initQuizForActiveAlgo();
+      renderQuiz();
+    }
+
+    // ----------------- (3) MANUAL SIDEBAR SYSTEM -----------------
+    function renderManualList(data) {
+      const container = document.getElementById('algorithm-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (data.length === 0) {
+        container.innerHTML = `<div class="text-xs text-slate-500 text-center py-8">無相符演算法</div>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.id = `manual-item-${item.id}`;
+        div.className = "group flex flex-col p-2.5 rounded-xl hover:bg-slate-800/60 cursor-pointer transition-all border border-transparent";
+        div.onclick = () => selectManualItem(item.id);
+        
+        div.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-200 group-hover:text-brand-500 transition-colors">${item.title}</span>
+            <span class="text-[10px] text-slate-500 group-hover:text-slate-400 transition-colors">實驗 ➔</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1 line-clamp-1">${item.summary}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // ----------------- (4) SYSTEM LOGIC: SEARCH, MODAL & ACTIONS -----------------
+    function selectManualItem(id) {
+      activeAlgorithmId = id;
+
+      const items = document.querySelectorAll('[id^="manual-item-"]');
+      items.forEach(el => el.classList.remove('bg-brand-900/40', 'border-brand-700/50'));
+      const targetItem = document.getElementById(`manual-item-${id}`);
+      if (targetItem) {
+        targetItem.classList.add('bg-brand-900/40', 'border-brand-700/50');
+      }
+
+      const match = localKnowledgeBase.find(item => item.id === id);
+      if (match) {
+        const rTitle = document.getElementById('report-title');
+        const rContent = document.getElementById('report-content');
+        if (rTitle) rTitle.innerText = match.title;
+        if (rContent) rContent.innerHTML = marked.parse(match.content);
+        
+        if (typeof renderMathInElement === 'function' && rContent) {
+          renderMathInElement(rContent, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false }
+            ]
+          });
+        }
+      }
+
+      // Initialize quiz questions
+      initQuizForActiveAlgo();
+
+      // If they are on quiz subtab, immediately render the quiz
+      if (activeSubTab === 'quiz') {
+        renderQuiz();
+      }
+
+      // Set up canvas default dataset and active buttons
+      const titleEl = document.getElementById('simulator-title');
+      const badgeEl = document.getElementById('sim-info-badge');
+      const controlsContainer = document.getElementById('sim-controls-container');
+      const resetBtn = document.getElementById('sim-reset-btn');
+      const actionBtn = document.getElementById('sim-action-btn');
+
+      if (actionBtn) actionBtn.classList.add('hidden');
+      if (resetBtn) resetBtn.classList.remove('hidden');
+      if (controlsContainer) {
+        controlsContainer.innerHTML = '';
+        simParams = {};
+      }
+
+      if (titleEl) titleEl.innerText = match ? match.title : "數據工作區";
+      generateMockPoints(id);
+
+      // --- ALL 10 HYPERPARAMETER CONTROL PANELS REGISTERED ---
+      if (id === 'all_intro') {
+        if (badgeEl) badgeEl.innerText = "機器學習智慧整合平台";
+        if (resetBtn) resetBtn.classList.add('hidden');
+      }
+
+      else if (id === 'linear_regression') {
+        if (badgeEl) badgeEl.innerText = "點擊畫布以新增自訂散點觀測即時擬合";
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="text-slate-400 leading-normal text-[11px] space-y-1.5">
+              <p>💡 <b>使用說明：</b></p>
+              <p>1. 您可以在畫面上任意點擊來建立自訂數據點。</p>
+              <p>2. 系統會利用<b>最小平方法 (OLS)</b> 即時更新線性公式斜率與截距並繪出最適直線！</p>
+            </div>
+          `;
+        }
+      }
+
+      else if (id === 'logistic_regression') {
+        if (badgeEl) badgeEl.innerText = "調整權重 Slope 與 Bias 控制 Sigmoid 分類線";
+        simParams.weight = 0.5;
+        simParams.bias = 0;
+        simParams.activeClass = 0;
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between mb-1 text-[11px]">
+                  <span>權重特徵斜率 (Weight Slope)</span>
+                  <span id="val-weight">0.5</span>
+                </div>
+                <input type="range" id="slider-weight" min="-3" max="3" step="0.1" value="0.5" class="w-full accent-brand-500">
+              </div>
+              <div>
+                <div class="flex justify-between mb-1 text-[11px]">
+                  <span>偏差截距項 (Bias Offset)</span>
+                  <span id="val-bias">0</span>
+                </div>
+                <input type="range" id="slider-bias" min="-120" max="120" step="1" value="0" class="w-full accent-brand-500">
+              </div>
+              <div class="pt-2 border-t border-slate-800">
+                <span class="block mb-2 text-[10px] text-slate-400">自訂畫布點擊類別：</span>
+                <div class="flex gap-2">
+                  <button id="btn-class0" class="flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold">紅色 Class 0</button>
+                  <button id="btn-class1" class="flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]">藍色 Class 1</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const slWeight = document.getElementById('slider-weight');
+          const slBias = document.getElementById('slider-bias');
+          if (slWeight) {
+            slWeight.addEventListener('input', (e) => {
+              simParams.weight = parseFloat(e.target.value);
+              const valWeight = document.getElementById('val-weight');
+              if (valWeight) valWeight.innerText = simParams.weight;
+              redrawSimulator();
+            });
+          }
+          if (slBias) {
+            slBias.addEventListener('input', (e) => {
+              simParams.bias = parseFloat(e.target.value);
+              const valBias = document.getElementById('val-bias');
+              if (valBias) valBias.innerText = simParams.bias;
+              redrawSimulator();
+            });
+          }
+
+          const b0 = document.getElementById('btn-class0');
+          const b1 = document.getElementById('btn-class1');
+          if (b0 && b1) {
+            b0.onclick = () => {
+              simParams.activeClass = 0;
+              b0.className = "flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold";
+              b1.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+            };
+            b1.onclick = () => {
+              simParams.activeClass = 1;
+              b0.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+              b1.className = "flex-1 py-1 bg-blue-950 border border-blue-700 rounded text-blue-300 text-[11px] font-bold";
+            };
+          }
+        }
+      }
+
+      else if (id === 'decision_trees') {
+        if (badgeEl) badgeEl.innerText = "調整最大樹深，觀測軸平行階梯分割決策區間";
+        simParams.treeDepth = 2;
+        simParams.activeClass = 0;
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between mb-1 text-[11px]">
+                  <span>最大分割樹深 (Max Depth)</span>
+                  <span id="val-depth">2</span>
+                </div>
+                <input type="range" id="slider-depth" min="1" max="4" step="1" value="2" class="w-full accent-brand-500">
+              </div>
+              <div class="pt-2 border-t border-slate-800">
+                <span class="block mb-2 text-[10px] text-slate-400">點擊新增點類別：</span>
+                <div class="flex gap-2">
+                  <button id="btn-dt-c0" class="flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold">紅色 Class 0</button>
+                  <button id="btn-dt-c1" class="flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]">藍色 Class 1</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const slDepth = document.getElementById('slider-depth');
+          if (slDepth) {
+            slDepth.addEventListener('input', (e) => {
+              simParams.treeDepth = parseInt(e.target.value);
+              const valDepth = document.getElementById('val-depth');
+              if (valDepth) valDepth.innerText = simParams.treeDepth;
+              redrawSimulator();
+            });
+          }
+
+          const b0 = document.getElementById('btn-dt-c0');
+          const b1 = document.getElementById('btn-dt-c1');
+          if (b0 && b1) {
+            b0.onclick = () => {
+              simParams.activeClass = 0;
+              b0.className = "flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold";
+              b1.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+            };
+            b1.onclick = () => {
+              simParams.activeClass = 1;
+              b0.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+              b1.className = "flex-1 py-1 bg-blue-950 border border-blue-700 rounded text-blue-300 text-[11px] font-bold";
+            };
+          }
+        }
+      }
+
+      else if (id === 'support_vector_machines') {
+        if (badgeEl) badgeEl.innerText = "調整懲罰係數 C，亮黃外框標記即為 Support Vectors";
+        simParams.svmC = 1.0;
+        simParams.activeClass = 0;
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between mb-1 text-[11px]">
+                  <span>懲罰正則係數 (C Cost)</span>
+                  <span id="val-svmc">1.0</span>
+                </div>
+                <input type="range" id="slider-svmc" min="0.3" max="5.0" step="0.1" value="1.0" class="w-full accent-brand-500">
+              </div>
+              <div class="pt-2 border-t border-slate-800">
+                <span class="block mb-2 text-[10px] text-slate-400">點擊新增點：</span>
+                <div class="flex gap-2">
+                  <button id="btn-svm-c0" class="flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold">紅色 Class 0</button>
+                  <button id="btn-svm-c1" class="flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]">藍色 Class 1</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const slSvmC = document.getElementById('slider-svmc');
+          if (slSvmC) {
+            slSvmC.addEventListener('input', (e) => {
+              simParams.svmC = parseFloat(e.target.value);
+              const valSvmC = document.getElementById('val-svmc');
+              if (valSvmC) valSvmC.innerText = simParams.svmC;
+              redrawSimulator();
+            });
+          }
+
+          const b0 = document.getElementById('btn-svm-c0');
+          const b1 = document.getElementById('btn-svm-c1');
+          if (b0 && b1) {
+            b0.onclick = () => {
+              simParams.activeClass = 0;
+              b0.className = "flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold";
+              b1.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+            };
+            b1.onclick = () => {
+              simParams.activeClass = 1;
+              b0.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+              b1.className = "flex-1 py-1 bg-blue-950 border border-blue-700 rounded text-blue-300 text-[11px] font-bold";
+            };
+          }
+        }
+      }
+
+      else if (id === 'naive_bayes') {
+        if (badgeEl) badgeEl.innerText = "背景即時運算渲染機率分佈密度漸層 (Contour Map)";
+        simParams.activeClass = 0;
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                💡 <b>單純貝氏模擬說明：</b><br>
+                請隨意在畫布上加點，背景的機率分佈漸層圖會即時隨著您的數據特徵自動更新分佈與均值位置！
+              </p>
+              <div class="pt-2 border-t border-slate-800">
+                <span class="block mb-2 text-[10px] text-slate-400">點擊新增點：</span>
+                <div class="flex gap-2">
+                  <button id="btn-nb-c0" class="flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold">紅色 Class 0</button>
+                  <button id="btn-nb-c1" class="flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]">藍色 Class 1</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const b0 = document.getElementById('btn-nb-c0');
+          const b1 = document.getElementById('btn-nb-c1');
+          if (b0 && b1) {
+            b0.onclick = () => {
+              simParams.activeClass = 0;
+              b0.className = "flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold";
+              b1.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+            };
+            b1.onclick = () => {
+              simParams.activeClass = 1;
+              b0.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+              b1.className = "flex-1 py-1 bg-blue-950 border border-blue-700 rounded text-blue-300 text-[11px] font-bold";
+            };
+          }
+        }
+      }
+
+      else if (id === 'knn_algorithm') {
+        if (badgeEl) badgeEl.innerText = "點擊畫布移動綠色預測點，即時關聯 K 個鄰居進行投票";
+        simParams.knnK = 3;
+        simParams.queryPoint = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between mb-1 text-[11px]">
+                  <span>K 近鄰投票數 (K Value)</span>
+                  <span id="val-knnk">3</span>
+                </div>
+                <input type="range" id="slider-knnk" min="1" max="9" step="2" value="3" class="w-full accent-brand-500">
+              </div>
+              <p class="text-slate-400 text-[11px]">
+                K值越小，決策範圍越易受噪聲影響（容易過配）；K值過大則模型較平滑。
+              </p>
+            </div>
+          `;
+
+          const slKnnK = document.getElementById('slider-knnk');
+          if (slKnnK) {
+            slKnnK.addEventListener('input', (e) => {
+              simParams.knnK = parseInt(e.target.value);
+              const valKnnK = document.getElementById('val-knnk');
+              if (valKnnK) valKnnK.innerText = simParams.knnK;
+              redrawSimulator();
+            });
+          }
+        }
+      }
+
+      else if (id === 'kmeans_clustering') {
+        if (badgeEl) badgeEl.innerText = "非監督聚類疊代演練，點擊「執行優化」進行單步收斂";
+        if (actionBtn) {
+          actionBtn.innerText = "單步疊代優化";
+          actionBtn.classList.remove('hidden');
+          actionBtn.onclick = () => {
+            runKMeansStep();
+          };
+        }
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="text-slate-400 leading-normal text-[11px] space-y-2">
+              <p>💡 <b>單步疊代流程：</b></p>
+              <p>1. <b>分配步驟 (Assign)：</b>所有灰點將依照距離尋找最近的方形質心並著上對應色彩。</p>
+              <p>2. <b>更新步驟 (Update)：</b>三個方向方形聚類中心點將移動至各群的平均核心（Mean）。</p>
+            </div>
+          `;
+        }
+      }
+
+      else if (id === 'random_forest') {
+        if (badgeEl) badgeEl.innerText = "調整樹木總數，觀察集成森林如何打造平滑穩健邊界";
+        simParams.forestTrees = 3;
+        simParams.activeClass = 0;
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between mb-1 text-[11px]">
+                  <span>森林子決策樹數 (Number of Trees)</span>
+                  <span id="val-forest">3</span>
+                </div>
+                <input type="range" id="slider-forest" min="1" max="10" step="1" value="3" class="w-full accent-brand-500">
+              </div>
+              <div class="pt-2 border-t border-slate-800">
+                <span class="block mb-2 text-[10px] text-slate-400">新增點類別：</span>
+                <div class="flex gap-2">
+                  <button id="btn-rf-c0" class="flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold">紅色 Class 0</button>
+                  <button id="btn-rf-c1" class="flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]">藍色 Class 1</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const slForest = document.getElementById('slider-forest');
+          if (slForest) {
+            slForest.addEventListener('input', (e) => {
+              simParams.forestTrees = parseInt(e.target.value);
+              const valForest = document.getElementById('val-forest');
+              if (valForest) valForest.innerText = simParams.forestTrees;
+              redrawSimulator();
+            });
+          }
+
+          const b0 = document.getElementById('btn-rf-c0');
+          const b1 = document.getElementById('btn-rf-c1');
+          if (b0 && b1) {
+            b0.onclick = () => {
+              simParams.activeClass = 0;
+              b0.className = "flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold";
+              b1.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+            };
+            b1.onclick = () => {
+              simParams.activeClass = 1;
+              b0.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+              b1.className = "flex-1 py-1 bg-blue-950 border border-blue-700 rounded text-blue-300 text-[11px] font-bold";
+            };
+          }
+        }
+      }
+
+      else if (id === 'boosting_algorithms') {
+        if (badgeEl) badgeEl.innerText = "疊加弱分類器以形成強大決策平面";
+        simParams.boostingRounds = 3;
+        simParams.activeClass = 0;
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between mb-1 text-[11px]">
+                  <span>Boosting 訓練輪數 (Estimators)</span>
+                  <span id="val-boosting">3</span>
+                </div>
+                <input type="range" id="slider-boosting" min="1" max="8" step="1" value="3" class="w-full accent-brand-500">
+              </div>
+              <div class="pt-2 border-t border-slate-800">
+                <span class="block mb-2 text-[10px] text-slate-400">新增點類別：</span>
+                <div class="flex gap-2">
+                  <button id="btn-boost-c0" class="flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold">紅色 Class 0</button>
+                  <button id="btn-boost-c1" class="flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]">藍色 Class 1</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const slBoosting = document.getElementById('slider-boosting');
+          if (slBoosting) {
+            slBoosting.addEventListener('input', (e) => {
+              simParams.boostingRounds = parseInt(e.target.value);
+              const valBoosting = document.getElementById('val-boosting');
+              if (valBoosting) valBoosting.innerText = simParams.boostingRounds;
+              redrawSimulator();
+            });
+          }
+
+          const b0 = document.getElementById('btn-boost-c0');
+          const b1 = document.getElementById('btn-boost-c1');
+          if (b0 && b1) {
+            b0.onclick = () => {
+              simParams.activeClass = 0;
+              b0.className = "flex-1 py-1 bg-red-950 border border-red-700 rounded text-red-300 text-[11px] font-bold";
+              b1.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+            };
+            b1.onclick = () => {
+              simParams.activeClass = 1;
+              b0.className = "flex-1 py-1 bg-slate-900 border border-slate-700 rounded text-slate-400 text-[11px]";
+              b1.className = "flex-1 py-1 bg-blue-950 border border-blue-700 rounded text-blue-300 text-[11px] font-bold";
+            };
+          }
+        }
+      }
+
+      else if (id === 'pca_dimension') {
+        if (badgeEl) badgeEl.innerText = "線性特徵降維，點選開啟投影至 PC1 特徵主軸";
+        simParams.projectPCA = false;
+
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-2 bg-slate-900 border border-slate-800 rounded-lg">
+                <span class="text-xs">特徵軸正交投影</span>
+                <button id="btn-toggle-pca" class="px-3 py-1 bg-slate-800 text-slate-400 rounded hover:text-white text-[11px] transition-colors">開啟</button>
+              </div>
+              <p class="text-slate-400 text-[11px] leading-relaxed">
+                開啟後，二維空間點會垂投影至 PC1（紅色主軸向量軸），視覺化地呈現高維度特徵被正交投射至一維特徵線空間的效果。
+              </p>
+            </div>
+          `;
+
+          const btnToggle = document.getElementById('btn-toggle-pca');
+          if (btnToggle) {
+            btnToggle.onclick = () => {
+              simParams.projectPCA = !simParams.projectPCA;
+              if (simParams.projectPCA) {
+                btnToggle.innerText = "關閉";
+                btnToggle.className = "px-3 py-1 bg-brand-900/80 text-brand-400 border border-brand-700/60 rounded text-[11px] font-bold";
+              } else {
+                btnToggle.innerText = "開啟";
+                btnToggle.className = "px-3 py-1 bg-slate-800 text-slate-400 rounded hover:text-white text-[11px]";
+              }
+              redrawSimulator();
+            };
+          }
+        }
+      }
+
+      else if (id === 'bias_variance') {
+        if (badgeEl) badgeEl.innerText = "經典靶心模擬直觀模型：低偏差低變異、高偏差高變異";
+        if (controlsContainer) {
+          controlsContainer.innerHTML = `
+            <div class="text-slate-400 leading-normal text-[11px] space-y-1.5">
+              <p>💡 <b>物理意涵：</b></p>
+              <p>• <b>偏差 (Bias)：</b>偏離紅心靶點的距離。偏差大代表模型擬合太弱（低配適）。</p>
+              <p>• <b>變異 (Variance)：</b>點本身的分散離散程度。變異大代表模型太敏感（過配適）。</p>
+            </div>
+          `;
+        }
+      }
+
+      redrawSimulator();
+      resizeCanvas();
+    }
+
+    // ----------------- (5) CHATBOT ENGINE -----------------
+    function renderChips() {
+      const container = document.getElementById('quick-chips');
+      if (!container) return;
+      container.innerHTML = '';
+      recommendedChips.forEach(chip => {
+        const button = document.createElement('button');
+        button.className = "flex-shrink-0 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700/60 text-slate-300 hover:text-white rounded-full text-[11px] transition-all flex-shrink-0";
+        button.innerText = chip;
+        button.onclick = () => {
+          const uInput = document.getElementById('user-input');
+          if (uInput) uInput.value = chip;
+          handleUserMessageSubmit();
+        };
+        container.appendChild(button);
+      });
+    }
+
+    function renderGreetingMessage() {
+      const container = document.getElementById('chat-history');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      const welcomeBubble = document.createElement('div');
+      welcomeBubble.className = "flex items-start space-x-2.5 max-w-sm";
+      welcomeBubble.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-brand-600/90 flex items-center justify-center text-white flex-shrink-0 shadow-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/></svg>
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center space-x-2">
+            <span class="text-[11px] font-bold text-slate-200">AI 智慧學習助教</span>
+            <span class="text-[9px] text-slate-500">${getCurrentTimeStr()}</span>
+          </div>
+          <div class="bg-bgdark-800 border border-slate-800/80 p-3 rounded-xl rounded-tl-none text-[11px] text-slate-300 leading-relaxed shadow space-y-2">
+            <p>您好！我是您的機器學習學習助教。我熟悉十大核心演算法，並隨時準備為您解惑。</p>
+            <p>現在您可以一邊在中央調整<b>圖表模擬參數</b>，一邊在右側隨時向我提問，達到最佳學習成效！</p>
+          </div>
+        </div>
+      `;
+      container.appendChild(welcomeBubble);
+    }
+
+    function appendMessage(sender, text, isLocalRetrieval = false) {
+      const container = document.getElementById('chat-history');
+      if (!container) return;
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `flex items-start space-x-2.5 max-w-[90%] ${sender === 'user' ? 'ml-auto justify-end' : ''}`;
+      
+      const parsedText = marked.parse(text);
+
+      if (sender === 'user') {
+        msgDiv.innerHTML = `
+          <div class="space-y-1 text-right">
+            <div class="flex items-center justify-end space-x-2">
+              <span class="text-[11px] font-bold text-slate-300">您</span>
+              <span class="text-[9px] text-slate-500">${getCurrentTimeStr()}</span>
+            </div>
+            <div class="bg-brand-600 text-slate-100 p-2.5 rounded-xl rounded-tr-none text-xs text-left leading-relaxed shadow font-medium">
+              ${text}
+            </div>
+          </div>
+        `;
+      } else {
+        const warningBanner = isLocalRetrieval 
+          ? `<div class="mb-2 p-1.5 bg-indigo-950/60 border border-indigo-900/40 rounded-lg text-[9px] text-indigo-300 leading-relaxed">
+               ⚠️ (系統提醒：使用<strong>本地快速檢索庫回答</strong>)
+             </div>`
+          : `<div class="mb-2 p-1.5 bg-emerald-950/40 border border-emerald-900/40 rounded-lg text-[9px] text-brand-400 flex items-center gap-1">
+               ✨ (系統提示：已啟用雲端大模型進行解析)
+             </div>`;
+
+        msgDiv.innerHTML = `
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white flex-shrink-0 shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/></svg>
+          </div>
+          <div class="space-y-1 flex-1 min-w-0">
+            <div class="flex items-center space-x-2">
+              <span class="text-[11px] font-bold text-slate-200">AI 智慧學習助教</span>
+              <span class="text-[9px] text-slate-500">${getCurrentTimeStr()}</span>
+            </div>
+            <div class="bg-bgdark-800 border border-slate-800/80 p-3 rounded-xl rounded-tl-none text-[11px] text-slate-300 leading-relaxed shadow overflow-x-auto markdown-body">
+              ${warningBanner}
+              <div class="prose prose-invert max-w-none text-slate-200 space-y-1.5">
+                ${parsedText}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(msgDiv, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false }
+          ]
+        });
+      }
+    }
+
+    function showTypingIndicator() {
+      const container = document.getElementById('chat-history');
+      if (!container) return;
+      const indicator = document.createElement('div');
+      indicator.id = 'typing-indicator';
+      indicator.className = "flex items-start space-x-2.5 max-w-xs";
+      indicator.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/></svg>
+        </div>
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold text-slate-400">AI 思考檢索中</span>
+          <div class="bg-slate-800 p-2.5 rounded-xl rounded-tl-none text-xs text-slate-400 flex items-center space-x-1">
+            <span class="w-1 h-1 bg-slate-500 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+            <span class="w-1 h-1 bg-slate-500 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+            <span class="w-1 h-1 bg-slate-500 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+          </div>
+        </div>
+      `;
+      container.appendChild(indicator);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
+    }
+
+    function updateStatusDisplay() {
+      const isKeyPresent = loadedKeys.gemini || loadedKeys.openai || loadedKeys.anthropic;
+      const keyBadge = document.getElementById('key-badge');
+      const statusText = document.getElementById('status-text');
+      const statusBanner = document.getElementById('status-banner');
+      const bannerActionBtn = document.getElementById('banner-action-btn');
+
+      if (isKeyPresent) {
+        if (keyBadge) keyBadge.className = "absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-bgdark-900";
+        if (statusText) statusText.innerHTML = `已連接雲端 ${currentProvider.toUpperCase()} (${activeModels[currentProvider]}) 🚀`;
+        if (statusBanner) statusBanner.className = "bg-emerald-950/30 border-b border-emerald-900/30 px-4 py-2 text-[10px] flex justify-between items-center text-emerald-200 flex-shrink-0";
+        if (bannerActionBtn) bannerActionBtn.innerText = "調整設定";
+      } else {
+        if (keyBadge) keyBadge.className = "absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-yellow-500 rounded-full border-2 border-bgdark-900";
+        if (statusText) statusText.innerHTML = "目前運作模式：免金鑰本地核心快速檢索模式";
+        if (statusBanner) statusBanner.className = "bg-indigo-950/40 border-b border-indigo-900/30 px-4 py-2 text-[10px] flex justify-between items-center text-indigo-200 flex-shrink-0";
+        if (bannerActionBtn) bannerActionBtn.innerText = "設定金鑰";
+      }
+    }
+
+    async function handleUserMessageSubmit() {
+      const inputEl = document.getElementById('user-input');
+      if (!inputEl) return;
+      const query = inputEl.value.trim();
+      if (!query) return;
+
+      appendMessage('user', query);
+      inputEl.value = '';
+
+      showTypingIndicator();
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      const providerKey = loadedKeys[currentProvider];
+      if (providerKey) {
+        await callCloudModel(query, providerKey);
+      } else {
+        performLocalSemanticRetrieval(query);
+      }
+    }
+
+    function performLocalSemanticRetrieval(userQuery) {
+      removeTypingIndicator();
+      const tokens = userQuery.toLowerCase().split(/[\s,，。？?！!、_-\s]+/);
+      let bestMatch = null;
+      let highestScore = 0;
+
+      localKnowledgeBase.forEach(item => {
+        let score = 0;
+        if (userQuery.toLowerCase().includes(item.title.toLowerCase()) || item.title.toLowerCase().includes(userQuery.toLowerCase())) {
+          score += 15;
+        }
+        item.keywords.forEach(kw => {
+          if (userQuery.toLowerCase().includes(kw.toLowerCase())) {
+            score += 10;
+          }
+        });
+        tokens.forEach(tok => {
+          if (tok.length > 1) {
+            if (item.content.toLowerCase().includes(tok)) score += 2;
+            if (item.title.toLowerCase().includes(tok)) score += 5;
+          }
+        });
+        if (score > highestScore) {
+          highestScore = score;
+          bestMatch = item;
+        }
+      });
+
+      if (bestMatch && highestScore > 4) {
+        let answer = `### 根據研讀報告，為您找到以下關於「**${bestMatch.title}**」的相關內容：\n\n${bestMatch.content}`;
+        appendMessage('assistant', answer, true);
+      } else {
+        let fallbackMsg = `不好意思，在本地的演算法手冊庫中，我沒有找到與 **「${userQuery}」** 直接吻合的單元。
+        
+您可以嘗試更換問法，例如使用更具體的演算法名稱或觀念：
+* **「什麼是偏差與變異的取捨？」**
+* **「支持向量機的核函數是什麼？」**
+* **「解釋隨機森林特點」**`;
+        appendMessage('assistant', fallbackMsg, true);
+      }
+    }
+
+    async function callCloudModel(userQuery, apiKey) {
+      const activeModel = activeModels[currentProvider];
+      const systemPrompt = `你是一個極度專業的機器學習智慧學習助理。
+現在請根據這份「機器學習十大演算法研讀報告」知識庫，來回答使用者的問題。
+
+以下為報告的重要核心知識架構供你做精準參考：
+${JSON.stringify(localKnowledgeBase.map(it => ({title: it.title, keywords: it.keywords})))}
+
+【規則指引】：
+1. 請一律使用繁體中文 (Traditional Chinese) 回答，口吻要友善、專業且充滿教育熱誠。
+2. 盡量有結構地回答，善用 Markdown (如粗體、條列點)、以及程式碼區塊。
+3. 對於所有數學公式，一律使用 LaTeX 格式，且一律使用 $ 表示行內公式，$$ 表示獨立區塊公式。例如：$y = wx + b$。`;
+
+      try {
+        if (currentProvider === 'gemini') {
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${apiKey}`;
+          const response = await fetchWithRetry(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ role: 'user', parts: [{ text: userQuery }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] }
+            })
+          });
+
+          const data = await response.json();
+          removeTypingIndicator();
+
+          if (data.candidates && data.candidates[0].content.parts[0].text) {
+            appendMessage('assistant', data.candidates[0].content.parts[0].text, false);
+          } else {
+            throw new Error(JSON.stringify(data));
+          }
+        } else if (currentProvider === 'openai') {
+          const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: activeModel,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userQuery }
+              ],
+              temperature: 0.7
+            })
+          });
+
+          const data = await response.json();
+          removeTypingIndicator();
+
+          if (data.choices && data.choices[0].message.content) {
+            appendMessage('assistant', data.choices[0].message.content, false);
+          } else {
+            throw new Error(data.error?.message || JSON.stringify(data));
+          }
+        } else if (currentProvider === 'anthropic') {
+          const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': apiKey,
+              'anthropic-version': '2023-06-01',
+              'anthropic-dangerous-direct-by-browser': 'true'
+            },
+            body: JSON.stringify({
+              model: activeModel,
+              max_tokens: 2048,
+              system: systemPrompt,
+              messages: [{ role: 'user', content: userQuery }]
+            })
+          });
+
+          const data = await response.json();
+          removeTypingIndicator();
+
+          if (data.content && data.content[0].text) {
+            appendMessage('assistant', data.content[0].text, false);
+          } else {
+            throw new Error(data.error?.message || JSON.stringify(data));
+          }
+        }
+      } catch (err) {
+        removeTypingIndicator();
+        console.error("API Call error:", err);
+        appendMessage('assistant', `⚠️ **雲端連線呼叫失敗**。可能原因：API 金鑰無效或跨網域請求限制。已為您切換至本地檢索模式回答：`);
+        performLocalSemanticRetrieval(userQuery);
+      }
+    }
+
+    async function fetchWithRetry(url, options, maxRetries = 5) {
+      let delay = 1000;
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const response = await fetch(url, options);
+          if (response.ok) return response;
+          if (response.status !== 429 && response.status < 500) {
+            return response;
+          }
+        } catch (e) {
+          if (i === maxRetries - 1) throw e;
+        }
+        await new Promise(res => setTimeout(res, delay));
+        delay *= 2;
+      }
+      throw new Error(`達最大重試次數後依舊失敗。`);
+    }
+
+    // ----------------- (6) MODAL & LAYOUT SETUP -----------------
+
+    // Defensively check layout toggle existence to prevent mobile-vs-desktop crash
+    function setupLayoutToggles() {
+      const chatToggle = document.getElementById('chat-toggle-btn');
+      const chatSidebar = document.getElementById('chat-sidebar');
+      const closeChat = document.getElementById('close-chat-btn');
+
+      const manualToggle = document.getElementById('manual-toggle-btn');
+      const manualSidebar = document.getElementById('manual-sidebar');
+      const closeManual = document.getElementById('close-manual-btn');
+
+      if (chatToggle && chatSidebar) {
+        chatToggle.onclick = () => {
+          chatSidebar.classList.toggle('hidden');
+          chatSidebar.classList.toggle('fixed');
+          chatSidebar.classList.toggle('inset-y-0');
+          chatSidebar.classList.toggle('right-0');
+        };
+      }
+      if (closeChat && chatSidebar) {
+        closeChat.onclick = () => {
+          chatSidebar.classList.add('hidden');
+          chatSidebar.classList.remove('fixed');
+        };
+      }
+
+      if (manualToggle && manualSidebar) {
+        manualToggle.onclick = () => {
+          manualSidebar.classList.toggle('hidden');
+        };
+      }
+      if (closeManual && manualSidebar) {
+        closeManual.onclick = () => {
+          manualSidebar.classList.add('hidden');
+        };
+      }
+    }
+
+    function setupModalListeners() {
+      const modal = document.getElementById('settings-modal');
+      const settingsBtn = document.getElementById('settings-btn');
+      const closeX = document.getElementById('close-modal-x');
+      const cancelBtn = document.getElementById('cancel-modal-btn');
+      const saveBtn = document.getElementById('save-modal-btn');
+      const backdrop = document.getElementById('settings-backdrop');
+      const bannerAction = document.getElementById('banner-action-btn');
+
+      const openModal = () => {
+        if (modal) modal.classList.remove('hidden');
+        switchProvider(currentProvider);
+      };
+
+      const closeModal = () => {
+        if (modal) modal.classList.add('hidden');
+        const feedback = document.getElementById('test-feedback');
+        if (feedback) feedback.className = "hidden";
+      };
+
+      if (settingsBtn) settingsBtn.onclick = openModal;
+      if (bannerAction) bannerAction.onclick = openModal;
+      if (closeX) closeX.onclick = closeModal;
+      if (cancelBtn) cancelBtn.onclick = closeModal;
+      if (backdrop) backdrop.onclick = closeModal;
+
+      const toggleVisBtn = document.getElementById('toggle-key-visibility');
+      const apiInput = document.getElementById('api-key-input');
+      const eyeOpen = document.getElementById('eye-open');
+      const eyeClosed = document.getElementById('eye-closed');
+
+      if (toggleVisBtn && apiInput && eyeOpen && eyeClosed) {
+        toggleVisBtn.onclick = () => {
+          if (apiInput.type === 'password') {
+            apiInput.type = 'text';
+            eyeOpen.classList.remove('hidden');
+            eyeClosed.classList.add('hidden');
+          } else {
+            apiInput.type = 'password';
+            eyeOpen.classList.add('hidden');
+            eyeClosed.classList.remove('hidden');
+          }
+        };
+      }
+
+      if (saveBtn) {
+        saveBtn.onclick = () => {
+          const inputKey = document.getElementById('api-key-input').value.trim();
+          const modelSelect = document.getElementById('model-select').value;
+
+          loadedKeys[currentProvider] = inputKey;
+          activeModels[currentProvider] = modelSelect;
+
+          localStorage.setItem(`${currentProvider}_api_key`, inputKey);
+          localStorage.setItem(`${currentProvider}_model`, modelSelect);
+
+          updateStatusDisplay();
+          closeModal();
+
+          appendMessage('assistant', `🛠️ **系統設定更新完成**！我們已將您設定的 **${providerConfig[currentProvider].title}** 金鑰與模型 (${modelSelect}) 套用到工作階段中。`);
+        };
+      }
+
+      const testBtn = document.getElementById('test-connection-btn');
+      if (testBtn) {
+        testBtn.onclick = async () => {
+          const inputKey = document.getElementById('api-key-input').value.trim();
+          const selectedModel = document.getElementById('model-select').value;
+          const feedback = document.getElementById('test-feedback');
+          
+          if (!inputKey && feedback) {
+            feedback.className = "p-2.5 rounded-xl text-xs flex items-center gap-2 bg-yellow-950/40 border border-yellow-900/50 text-yellow-300";
+            feedback.innerHTML = `⚠️ 請先輸入金鑰再進行連線測試！`;
+            feedback.style.display = 'flex';
+            return;
+          }
+
+          if (feedback) {
+            feedback.className = "p-2.5 rounded-xl text-xs flex items-center gap-2 bg-slate-900 text-slate-400";
+            feedback.innerHTML = `<span class="w-3.5 h-3.5 border-2 border-slate-600 border-t-brand-500 rounded-full animate-spin"></span> 測試發送驗證請求中...`;
+            feedback.style.display = 'flex';
+          }
+
+          try {
+            if (currentProvider === 'gemini') {
+              const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${inputKey}`;
+              const res = await fetch(testUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Ping" }] }] })
+              });
+              const data = await res.json();
+              if (res.ok && data.candidates && feedback) {
+                feedback.className = "p-2.5 rounded-xl text-xs flex items-center gap-2 bg-emerald-950/40 border border-emerald-900/50 text-emerald-300";
+                feedback.innerHTML = `✅ 連線成功！此 Gemini API Key 與模型版本有效。`;
+              } else {
+                throw new Error(data.error?.message || "伺服器未預期回應");
+              }
+            } else if (currentProvider === 'openai') {
+              const res = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${inputKey}`
+                },
+                body: JSON.stringify({
+                  model: selectedModel,
+                  messages: [{ role: 'user', content: 'Ping' }],
+                  max_tokens: 5
+                })
+              });
+              const data = await res.json();
+              if (res.ok && feedback) {
+                feedback.className = "p-2.5 rounded-xl text-xs flex items-center gap-2 bg-emerald-950/40 border border-emerald-900/50 text-emerald-300";
+                feedback.innerHTML = `✅ 連線成功！此 OpenAI API Key 有效。`;
+              } else {
+                throw new Error(data.error?.message || "驗證失敗");
+              }
+            } else if (feedback) {
+              feedback.className = "p-2.5 rounded-xl text-xs flex items-center gap-2 bg-blue-950/40 border border-blue-900/50 text-blue-300";
+              feedback.innerHTML = `ℹ️ Anthropic 暫不支援純前端測試連線。直接儲存金鑰，發問時可正常調用！`;
+            }
+          } catch (e) {
+            if (feedback) {
+              feedback.className = "p-2.5 rounded-xl text-xs flex items-center gap-2 bg-red-950/40 border border-red-900/50 text-red-300";
+              feedback.innerHTML = `❌ 連線失敗。原因：${e.message || e}`;
+            }
+          }
+        };
+      }
+    }
+
+    function switchProvider(provider) {
+      currentProvider = provider;
+      const config = providerConfig[provider];
+      
+      ['gemini', 'openai', 'anthropic'].forEach(tab => {
+        const btn = document.getElementById(`tab-${tab}`);
+        if (btn) {
+          if (tab === provider) {
+            btn.className = "py-2 text-xs font-medium rounded-lg text-center transition-all bg-brand-600 text-white shadow-sm";
+          } else {
+            btn.className = "py-2 text-xs font-medium rounded-lg text-center transition-all text-slate-400 hover:text-slate-200";
+          }
+        }
+      });
+
+      const kLabel = document.getElementById('key-label');
+      if (kLabel) kLabel.innerText = `${config.title} API Key:`;
+
+      const inputEl = document.getElementById('api-key-input');
+      if (inputEl) {
+        inputEl.value = loadedKeys[provider] || '';
+        inputEl.placeholder = `輸入您的 ${config.title} 金鑰 (例如 ${provider === 'gemini' ? 'AIzaSy...' : 'sk-...'})`;
+      }
+
+      const selectEl = document.getElementById('model-select');
+      if (selectEl) {
+        selectEl.innerHTML = '';
+        config.models.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.value;
+          opt.innerText = m.label;
+          if (m.value === activeModels[provider]) {
+            opt.selected = true;
+          }
+          selectEl.appendChild(opt);
+        });
+      }
+    }
+
+    // ----------------- (7) K-MEANS INTERACTIVE STEPPERS -----------------
+    function runKMeansStep() {
+      if (activeAlgorithmId !== 'kmeans_clustering') return;
+
+      let changed = false;
+      simPoints.forEach(p => {
+        let minDist = Infinity;
+        let closestIdx = -1;
+        simCentroids.forEach((c, idx) => {
+          const d = (p.x - c.x)**2 + (p.y - c.y)**2;
+          if (d < minDist) {
+            minDist = d;
+            closestIdx = idx;
+          }
+        });
+        if (p.cluster !== closestIdx) {
+          p.cluster = closestIdx;
+          changed = true;
+        }
+      });
+
+      simCentroids.forEach((c, idx) => {
+        const clusterPoints = simPoints.filter(p => p.cluster === idx);
+        if (clusterPoints.length > 0) {
+          let avgX = 0, avgY = 0;
+          clusterPoints.forEach(p => { avgX += p.x; avgY += p.y; });
+          c.x = avgX / clusterPoints.length;
+          c.y = avgY / clusterPoints.length;
+        }
+      });
+
+      redrawSimulator();
+    }
+
+    // ----------------- (8) INITIALIZATION ON LOAD -----------------
+    window.addEventListener('DOMContentLoaded', () => {
+      // Create and pre-render sidebar elements
+      renderManualList(localKnowledgeBase);
+      renderChips();
+      renderGreetingMessage();
+      updateStatusDisplay();
+      
+      // Bind Search
+      const mSearch = document.getElementById('manual-search');
+      if (mSearch) {
+        mSearch.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+          const filtered = localKnowledgeBase.filter(item => 
+            item.title.toLowerCase().includes(query) || 
+            item.keywords.some(kw => kw.toLowerCase().includes(query)) ||
+            item.summary.toLowerCase().includes(query)
+          );
+          renderManualList(filtered);
+        });
+      }
+
+      // Form submission
+      const cForm = document.getElementById('chat-form');
+      if (cForm) {
+        cForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          handleUserMessageSubmit();
+        });
+      }
+
+      setupModalListeners();
+      setupLayoutToggles();
+      
+      // Default to "all_intro" and trigger render
+      selectManualItem('all_intro');
+
+      // Adaptive window size listener to properly toggle block classes between Desktop/Mobile
+      const widthListener = (e) => {
+        const centerPane = document.getElementById('center-pane');
+        const simulatorCard = document.getElementById('pane-simulator');
+        const manualCard = document.getElementById('pane-manual');
+        const chatSidebar = document.getElementById('chat-sidebar');
+
+        if (e.matches) {
+          // Large Desktop View: Unhide everything and display standard layout
+          if (centerPane) centerPane.classList.remove('hidden');
+          if (simulatorCard) simulatorCard.classList.remove('hidden');
+          if (manualCard) manualCard.classList.remove('hidden');
+          if (chatSidebar) {
+            chatSidebar.classList.remove('hidden', 'flex', 'w-full');
+            chatSidebar.classList.add('hidden', 'lg:flex');
+          }
+        } else {
+          // Mobile: default to showing Manual tab on transition
+          switchMobileView('manual');
+        }
+      };
+      
+      const mQ = window.matchMedia('(min-width: 1024px)');
+      mQ.addListener(widthListener);
+      widthListener(mQ);
+
+      // Resize canvas on layout settles
+      setTimeout(resizeCanvas, 200);
+    });
+  </script>
+</body>
+</html>
