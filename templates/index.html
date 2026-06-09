@@ -154,10 +154,10 @@
     </aside>
 
     <!-- 2. CENTER PANEL: Unified Scrollable Handbook & Interactive Simulator -->
-    <div id="center-pane" class="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-6 space-y-6 min-w-0">
+    <div id="center-pane" class="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-8 space-y-10 min-w-0">
       
       <!-- CARD 1: Interactive Simulator Pane -->
-      <section id="pane-simulator" class="bg-bgdark-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col flex-shrink-0">
+      <section id="pane-simulator" class="bg-bgdark-900 border border-slate-800 rounded-2xl p-5 lg:p-7 shadow-xl flex flex-col flex-shrink-0">
         
         <!-- Top Title -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 mb-4 gap-2">
@@ -180,7 +180,7 @@
           </div>
 
           <!-- Param Controls Panel -->
-          <div class="w-full xl:w-72 flex flex-col justify-between bg-bgdark-800/20 border border-slate-800/50 p-4 rounded-xl space-y-4 flex-shrink-0">
+          <div class="w-full xl:w-72 flex flex-col justify-between bg-bgdark-800/20 border border-slate-800/50 p-5 rounded-xl space-y-5 flex-shrink-0">
             <div>
               <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1"/></svg>
@@ -192,8 +192,8 @@
             </div>
 
             <!-- Action buttons -->
-            <div class="pt-2 border-t border-slate-800/60 flex items-center gap-2">
-              <button id="sim-reset-btn" class="flex-1 py-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors">
+            <div class="pt-4 border-t border-slate-800/60 flex items-center gap-2">
+              <button id="sim-reset-btn" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors">
                 重置數據
               </button>
               <button id="sim-action-btn" class="flex-1 py-1.5 bg-brand-600 hover:bg-brand-500 active:bg-brand-700 text-white rounded-lg text-xs font-semibold transition-colors hidden">
@@ -205,7 +205,7 @@
       </section>
 
       <!-- CARD 2: Handbook Text & Quiz Report -->
-      <section id="pane-manual" class="bg-bgdark-900/40 border border-slate-800/80 rounded-2xl p-5 lg:p-6 shadow-lg space-y-4 flex-shrink-0">
+      <section id="pane-manual" class="bg-bgdark-900/40 border border-slate-800/80 rounded-2xl p-6 lg:p-8 shadow-lg space-y-5 flex-shrink-0">
         
         <!-- Header with Sub-tabs Switcher -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-3">
@@ -221,7 +221,7 @@
         </div>
         
         <!-- Handbook Content Container -->
-        <div id="report-content" class="prose prose-invert max-w-none text-xs leading-relaxed text-slate-300 space-y-4">
+        <div id="report-content" class="prose prose-invert max-w-none text-sm leading-relaxed text-slate-300 space-y-4">
           <!-- Handled dynamically -->
         </div>
 
@@ -1273,7 +1273,8 @@ $$Error = Bias^2 + Variance + Irreducible Error$$
         regions.forEach(r => {
           ctx.fillStyle = r.pred === 0 ? 'rgba(239, 68, 68, 0.15)' : 'rgba(59, 130, 246, 0.15)';
           ctx.fillRect(r.xMin, r.yMin, r.xMax - r.xMin, r.yMax - r.yMin);
-          ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)'; // slate-400 with 50% opacity
+          ctx.lineWidth = 1.5;
           ctx.strokeRect(r.xMin, r.yMin, r.xMax - r.xMin, r.yMax - r.yMin);
         });
 
@@ -2941,6 +2942,15 @@ ${JSON.stringify(localKnowledgeBase.map(it => ({title: it.title, keywords: it.ke
       setupModalListeners();
       setupLayoutToggles();
       
+      // Bind Reset Button for Simulator
+      const resetBtn = document.getElementById('sim-reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          // 重新載入目前的演算法，自動重置數據點、滑桿參數並重繪圖表
+          selectManualItem(activeAlgorithmId);
+        });
+      }
+
       // Default to "all_intro" and trigger render
       selectManualItem('all_intro');
 
